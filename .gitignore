@@ -1,0 +1,4 @@
+.idea
+*.pyc
+front-end
+db.sqlite3

@@ -1,0 +1,84 @@
+/*do not know*/
+html {
+    -moz-osx-font-smoothing: grayscale;
+    overflow-y: scroll;
+}
+
+/*背景颜色为黑*/
+.tm-background {
+    background: #252525 none repeat scroll 0 0;
+}
+
+/*中间一条线*/
+.tm-main {
+    border-left: 1px solid #e5e5e5;
+    padding-left: 50px !important;
+}
+
+/*字体你懂*/
+body, h1, h2, h3, h4, h5, h6, .uk-navbar-nav > li > a {
+    font-family: "noto-thin", "Proxima Nova","Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+
+/*子标题左边有蓝色的边边*/
+.tm-article-subtitle {
+    border-left: 3px solid #1fa2d6;
+    font-size: 16px;
+    line-height: 16px;
+    padding-left: 6px;
+}
+
+/*正文离标题远一点(根据不同的屏幕宽度),然后给点颜色看看*/
+.tm-middle {
+    background: #fff none repeat scroll 0 0;
+}
+.tm-middle, .tm-section, .tm-footer {
+    padding: 50px 0;
+}
+@media (min-width: 768px) {
+    .tm-middle, .tm-section, .tm-footer {
+        padding: 60px 0;
+    }
+}
+@media (min-width: 1220px) {
+    .tm-middle, .tm-section, .tm-footer {
+        padding: 70px 0;
+    }
+}
+
+/*
+ * Middle
+ */
+
+.tm-middle { background: #fff; }
+
+/* Tablet and bigger */
+@media (min-width: 768px) {
+
+    .tm-sidebar {
+        margin-right: -1px !important;
+        border-right: 1px solid #E5E5E5;
+    }
+
+    .tm-main {
+        padding-left: 50px !important;
+        border-left: 1px solid #E5E5E5;
+    }
+
+    .tm-sidebar .uk-panel { padding-right: 20px; }
+
+}
+
+/*
+ * Nav
+ */
+
+.tm-nav > li > a { color: #777; }
+
+/* Hover */
+.tm-nav > li > a:hover,
+.tm-nav > li > a:focus,
+.tm-nav > li.uk-active > a  {
+    background: #F5F5F5;
+    color: #444;
+}

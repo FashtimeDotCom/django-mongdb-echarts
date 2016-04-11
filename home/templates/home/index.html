@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}cmdb-api-demo{% endblock %}
+
+{% block css %}
+{#	<!-- codemirror CSS -->#}
+{#	<link rel="stylesheet" href={% static "css/codemirror.css" %} />#}
+{#    <!-- codemirror css theme -->#}
+{#	<link rel="stylesheet" href={% static "css/blackboard.css" %} />#}
+{% endblock %}
+
+{% block content %}
+<div class="uk-container uk-container-center">
+    <div class="uk-grid">
+        <div class="tm-sidebar uk-hidden-small uk-row-first uk-width-medium-1-3">
+            <ul class="tm-nav uk-nav" data-uk-nav="">
+
+                <li class="uk-nav-header">分类管理</li>
+                <li class=""><a href="">创建分类</a></li>
+                <li><a href="">为指定分类新增属性</a></li>
+                <li><a href="">修改分类基本信息</a></li>
+                <li><a href="">获取指定分类信息</a></li>
+                <li><a href="">根据分类名称获取分类</a></li>
+
+            </ul>
+        </div>
+        <div class="tm-sidebar uk-hidden-small uk-row-first uk-width-medium-1-3">
+            <ul class="tm-nav uk-nav" data-uk-nav="">
+
+                <li class="uk-nav-header">属性管理</li>
+                <li><a href="">获取指定分类的所有属性，包括继承的与公共的</a></li>
+                <li><a href="">添加一个属性</a></li>
+                <li><a href="">批量添加一些属性</a></li>
+
+            </ul>
+        </div>
+        <div class="uk-hidden-small uk-row-first uk-width-medium-1-3">
+            <ul class="tm-nav uk-nav" data-uk-nav="">
+
+                <li class="uk-nav-header">CI管理</li>
+                <li><a href="">新增一条CI记录</a></li>
+                <li><a href="">批量新增CI记录</a></li>
+                <li><a href="">更新一条CI记录</a></li>
+                <li><a href="">批量更新多条CI记录</a></li>
+                <li><a href="">删除一条CI记录</a></li>
+                <li><a href="">批量删除多条CI记录</a></li>
+                <li><a href="">获取指定分类的CI记录</a></li>
+                <li><a href="">支持高级查询语法的查询</a></li>
+                <li><a href="">通过IP获取指定分类的CI</a></li>
+                <li><a href="">通过IP或IP List获取指定分类的CI</a></li>
+
+            </ul>
+        </div>
+{#        <div class="tm-main uk-width-medium-4-5">#}
+{#            <h1 class="uk-article-title">分类管理</h1>#}
+{#            <h3 class="tm-article-subtitle">创建分类-CreateCategory</h3>#}
+{#            <textarea title="editor" id="python_editor" name="python_editor"></textarea>#}
+{#        </div>#}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{#	<script type="text/javascript" src={% static "js/codemirror.js" %}></script>#}
+{#	<script type="text/javascript" src={% static "js/python.js" %}></script>#}
+{% endblock %}

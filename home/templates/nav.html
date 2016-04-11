@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<nav class="uk-navbar">
+    <div class="uk-container uk-container-center">
+        <a href="/" class="uk-navbar-brand uk-hidden-small">
+            <img style="height: 30px" alt="tmpbook" title="tmpbook" src="{% static "img/ic.png" %}" class="uk-margin uk-margin-remove">
+        </a>
+        <ul class="uk-navbar-nav">
+            <li class="{% if 'home' in current_page %}uk-active{% endif %}"><a href="">索引</a></li>
+            <li class="{% if 'category' in current_page %}uk-active{% endif %}"><a href="">分类管理</a></li>
+            <li class="{% if 'attr' in current_page %}uk-active{% endif %}"><a href="">属性管理</a></li>
+            <li class="{% if 'ci' in current_page %}uk-active{% endif %}"><a href="">CI管理</a></li>
+{#            <li class="uk-parent"><a href="">关于</a></li>#}
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,28 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+	<link rel="stylesheet" href={% static "css/uikit.min.css" %} />
+	<link rel="stylesheet" href={% static "css/docs.css" %} />
+	<link rel="stylesheet" href={% static "css/sweetalert.css" %} />
+	<link rel="stylesheet" href={% static "css/jsontree.css" %} />
+    {% block css %}
+    {% endblock %}
+</head>
+<body>
+    {% include "nav.html" %}
+    <div class="tm-middle">
+            {% block content %}
+            {% endblock %}
+    </div>
+
+	<script type="text/javascript" src={% static "js/jquery-1.11.2.js" %}></script>
+	<script type="text/javascript" src={% static "js/uikit.min.js" %}></script>
+	<script type="text/javascript" src={% static "js/sweetalert.min.js" %}></script>
+	<script type="text/javascript" src={% static "js/jsontree.min.js" %}></script>
+    {% block js %}
+    {% endblock %}
+</body>
+</html>
