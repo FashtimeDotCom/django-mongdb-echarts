@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <nav class="uk-navbar">
-    <div class="uk-container uk-container-center">
+{#    <div class="uk-container uk-container-center">#}
         <a href="/" class="uk-navbar-brand uk-hidden-small">
             <img style="height: 30px" alt="tmpbook" title="tmpbook" src="{% static "img/ic.png" %}" class="uk-margin uk-margin-remove">
         </a>
@@ -11,5 +11,5 @@
             <li class="{% if 'ci' in current_page %}uk-active{% endif %}"><a href="">CI管理</a></li>
 {#            <li class="uk-parent"><a href="">关于</a></li>#}
         </ul>
-    </div>
+{#    </div>#}
 </nav>

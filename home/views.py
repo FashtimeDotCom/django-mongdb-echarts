@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from .models import Poll, T_db_instance
+# coding:utf8
+from .models import Poll, Db
 # Create your views here.
 from django.views.generic import TemplateView
+from datetime import datetime
 
 
 class IndexView(TemplateView):
@@ -10,12 +11,23 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['asd'] = "123"
-        context['current_page'] = "index"
+        context['current_page'] = "home"
         return context
 
-# for poll in Poll.objects(question__startswith="W"):
-for poll in Poll.objects():
-    print len(poll.choices),
-    print poll.to_json()
 
-T_db_instance(InstanceMode="What is wrong with you?").save()
+class EchartsIndexView(TemplateView):
+    template_name = "home/echarts.html"
+# for poll in Poll.objects(question__startswith="W"):
+# print Poll.objects().count()
+# for poll in Poll.objects():
+#     print poll.question
+# print datetime.now().day
+print "共{}个".format(Db.objects.count())
+
+# queryset没有属性
+# for i in Db.objects[:1]:
+#     print i
+# for f in Db.objects():
+#     print f.to_json(), f.ModifyTime.day == datetime.now().day
+# Db(DBId='1', InstanceMode="2", ModifyTime=datetime.now()).save()
+# Db.objects(DBId=None).delete()

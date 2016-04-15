@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -133,11 +133,14 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-_MONGODB_USER = ''
-_MONGODB_PASSWD = ''
-_MONGODB_HOST = '192.168.8.170'
-_MONGODB_NAME = 'kevin'
-_MONGODB_DATABASE_HOST = \
-    'mongodb://%s/%s' \
-    % (_MONGODB_HOST, _MONGODB_NAME)
-mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
+from .password_settings import _MONGODB_USER, _MONGODB_PASSWD
+# _MONGODB_HOST = '192.168.8.170'
+_MONGODB_HOST = '172.17.10.34'
+# _MONGODB_NAME = 'kevin'
+_MONGODB_NAME = 'udb'
+# mongodb://look:pwd@localhost/users_dev
+_MONGODB_DATABASE_HOST = 'mongodb://%s:%s@%s/%s' \
+    % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
+
+mongoengine.connect(host=_MONGODB_DATABASE_HOST)
+# mongoengine.connect(host=_MONGODB_DATABASE_HOST, username=_MONGODB_USER, password=_MONGODB_PASSWD)
