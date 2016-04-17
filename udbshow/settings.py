@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 import mongoengine
+from .password_settings import _MONGODB_USER, _MONGODB_PASSWD
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -114,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+# TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
@@ -133,7 +135,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-from .password_settings import _MONGODB_USER, _MONGODB_PASSWD
 # _MONGODB_HOST = '192.168.8.170'
 _MONGODB_HOST = '172.17.10.34'
 # _MONGODB_NAME = 'kevin'
@@ -142,5 +143,6 @@ _MONGODB_NAME = 'udb'
 _MONGODB_DATABASE_HOST = 'mongodb://%s:%s@%s/%s' \
     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
 
+print _MONGODB_DATABASE_HOST
 mongoengine.connect(host=_MONGODB_DATABASE_HOST)
 # mongoengine.connect(host=_MONGODB_DATABASE_HOST, username=_MONGODB_USER, password=_MONGODB_PASSWD)

@@ -1,13 +1,33 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
-{% block title %}echart{% endblock %}
+{% block title %}UDB-Echart{% endblock %}
 
 {% block css %}
 {% endblock %}
 
 {% block content %}
-    asd
+{#<div class="tm-middle">#}
+{#    <div class="uk-container uk-container-center">#}
+        <div class="uk-grid uk-margin-large-top">
+            <div class="uk-width-medium-1-2">
+                <div class="uk-panel-box uk-margin-left">
+                    <div id="lefttop" style="height:400px;"></div>
+                </div>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <div class="uk-panel-box uk-margin-right">
+                    <div id="righttop" style="height:400px;"></div>
+                </div>
+            </div>
+        </div>
+{#    </div>#}
+{#</div>#}
 {% endblock %}
 
 {% block js %}
+	<script type="text/javascript" src={% static "js/echarts.min.js" %}></script>
+	<script type="text/javascript" src={% static "echartsjs/delta.js" %}></script>
+    <script>
+    </script>
 {% endblock %}
