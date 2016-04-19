@@ -3,10 +3,11 @@ from .models import Db
 # Create your views here.
 from django.views.generic import TemplateView
 import calendar
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
-from mongoengine import queryset_manager
+import pytz, datetime
+from udbshow.settings import TIME_ZONE
 
 
 class IndexView(TemplateView):
@@ -22,22 +23,38 @@ class IndexView(TemplateView):
 def utc_to_local(utc_dt):
     # get integer timestamp to avoid precision lost
     timestamp = calendar.timegm(utc_dt.timetuple())
-    local_dt = datetime.fromtimestamp(timestamp)
+    local_dt = datetime.datetime.fromtimestamp(timestamp)
     assert utc_dt.resolution >= timedelta(microseconds=1)
     return local_dt.replace(microsecond=utc_dt.microsecond)
+
+
+def local_to_utc(local_dt, time_zone):
+    local = pytz.timezone(time_zone)
+    local_dt = local.localize(local_dt, is_dst=None)
+    return local_dt.astimezone(pytz.utc)
 
 
 class EchartsIndexView(TemplateView):
     template_name = "home/echarts.html"
 
 
-print "共{}个".format(Db.objects.count())
+# print "共{}个".format(Db.objects.all()[:10].to_json())
 # print "前十行业列表：{}".format(sorted(Db.outer.order_
 # by('DBClass').distinct('Industry'), key=lambda s: Db.outer(Industry=s).count())[-11:-1])
 # print Db.outer.distinct('InstanceMode')
-for i in Db.objects(ClusterId="udbha-ajv0dp"):
-    print i.InstanceMode, i.DBId, i.ClusterId
+# for i in Db.objects(ClusterId="udbha-ajv0dp"):
+#     print i.InstanceMode, i.DBId, i.ClusterId
 # print "前十公司列表：{}".format(sorted(Db.outer.distinct('CompanyId'), key=lambda s: Db.outer(CompanyId=s).count())[-11:-1])
+
+from operator import itemgetter
+companies = Db.outer.item_frequencies('CompanyName', normalize=True)
+top_companies = sorted(companies.items(), key=itemgetter(1), reverse=True)[:10]
+for t, f in top_companies:
+    print t, Db.outer(CompanyName=t).count()
+
+# cmy_list = Db.objects.distinct('CompanyId')
+# count_list = [Db.objects(CompanyId=_i).count() for _i in cmy_list]
+# print count_list[-10:]
 # for i in Db.objects.all()[:40]:
 #     print i.DBClass, i.DBType
 #     print i.CreateTime
@@ -135,10 +152,6 @@ def inner_dbclass(request):
             for v in Db.inner(DBClass=dbclass).distinct('DBType'):
                 data['data3'].append({'value': Db.inner(DBClass=dbclass, DBType=v).count(), 'name': v})
     return JsonResponse(data, safe=False)
-"""
-Db.inner.order_by('DBClass').distinct('Industry')
-sorted(Db.inner.order_by('DBClass').distinct('Industry'), key=lambda s: Db.inner(Industry=s).count())[-11:-1]
-"""
 
 
 @csrf_exempt
@@ -244,13 +257,43 @@ def lefttop(request):
 @csrf_exempt
 def righttop(request):
     # field = request.POST.get('field')
-    field = "Role"
+    field = "State"
     data = field_count(field)
     data['title'] = field
     data['series_name'] = "数量"
     return JsonResponse(data, safe=False)
 
-"""
-post = BlogPost.objects(...).only("title", "author.name")
-Post.objects(Q(published=True) | Q(publish_date__lte=datetime.now()))
-"""
+
+def fish_bone_disk(request):
+    data = dict()
+    data['title'] = 'disk space净新增(GB)'
+    data['data1'] = []
+    data['data2'] = []
+    data['data3'] = []
+    _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
+    seven_month_list = [month for month in range(_utc_now.month - 5, _utc_now.month+1) if month > 0]
+    data['y'] = ["{}月".format(_i) for _i in seven_month_list]
+    for month in seven_month_list:
+        data['data1'].append(Db.outer_with_delete_and_fail(CreateMonth=month).sum('DiskSpace'))
+        data['data2'].append(0 - Db.outer_with_delete_and_fail(ModifyMonth=month, State="Delete").sum('DiskSpace'))
+    for _i in xrange(0, len(seven_month_list)):
+        data['data3'].append(data['data1'][_i] + data['data2'][_i])
+    return JsonResponse(data, safe=False)
+
+
+def fish_bone_memory(request):
+    data = {
+        'title': 'memory limit净新增(MB)',
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
+    _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
+    seven_month_list = [month for month in range(_utc_now.month - 5, _utc_now.month+1) if month > 0]
+    data['y'] = ["{}月".format(_i) for _i in seven_month_list]
+    for month in seven_month_list:
+        data['data1'].append(Db.outer_with_delete_and_fail(CreateMonth=month).sum('MemoryLimit'))
+        data['data2'].append(0 - Db.outer_with_delete_and_fail(ModifyMonth=month, State="Delete").sum('MemoryLimit'))
+    for _i in xrange(0, len(seven_month_list)):
+        data['data3'].append(data['data1'][_i] + data['data2'][_i])
+    return JsonResponse(data, safe=False)

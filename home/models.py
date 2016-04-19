@@ -48,6 +48,10 @@ class Db(Document):
         return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='No'))
 
     @queryset_manager
+    def outer_with_delete_and_fail(self, queryset):
+        return queryset(Q(InnerMark='No'))
+
+    @queryset_manager
     def inner(self, queryset):
         return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
 

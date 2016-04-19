@@ -6,12 +6,16 @@ var topright = echarts.init(document.getElementById('topright'));
 var top_10_industry = echarts.init(document.getElementById('top_10_industry'));
 var one_one = echarts.init(document.getElementById('one_one'));
 var one_two = echarts.init(document.getElementById('one_two'));
+var fish_bone_disk = echarts.init(document.getElementById('fish_bone_disk'));
+var fish_bone_memory = echarts.init(document.getElementById('fish_bone_memory'));
 
 topleft.showLoading();
 topright.showLoading();
 top_10_industry.showLoading();
 one_two.showLoading();
 one_one.showLoading();
+fish_bone_disk.showLoading();
+fish_bone_memory.showLoading();
 
 $.get('/topleft/').done(function (data) {
     var option = {
@@ -158,7 +162,7 @@ $.get('/topright/').done(function (data) {
 $.get('/top_10_industry/').done(function (data) {
     var option = {
         title : {
-            text: '行业前十',
+            text: '行业前十（详情请点击相应扇图）',
             //subtext: '纯属虚构',
             x:'center'
         },
@@ -226,9 +230,6 @@ $.get('/top_10_industry/').done(function (data) {
     top_10_industry.hideLoading();
 });
 
-
-
-
 $.get('/one_one/').done(function (data) {
     var option = {
         // 例子：柱状图的每个柱子、饼图的每个扇形
@@ -249,6 +250,12 @@ $.get('/one_one/').done(function (data) {
         legend: {
             data: ['数量']
         },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
         xAxis: {
             data: data['field_list']
         },
@@ -263,7 +270,6 @@ $.get('/one_one/').done(function (data) {
     one_one.setOption(option);
 });
 
-
 $.get('/one_two/').done(function (data) {
     var option = {
         title: {
@@ -272,6 +278,12 @@ $.get('/one_two/').done(function (data) {
         tooltip: {},
         legend: {
             data: ['数量']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
         xAxis: {
             //data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
@@ -289,14 +301,165 @@ $.get('/one_two/').done(function (data) {
     one_two.setOption(option);
 });
 
+$.get('/fish_bone_disk/').done(function (data) {
+    var option = {
+        title : {
+            text: data['title'],
+            subtext: '数据为当年的',
+            x:'left'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+            data:['净增', '创建', '删除']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        yAxis : [
+            {
+                type : 'category',
+                axisTick : {show: false},
+                data : data['y']
+            }
+        ],
+        series : [
+            {
+                name:'净增',
+                type:'bar',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside'
+                    }
+                },
+                data:data['data3']
+            },
+            {
+                name:'创建',
+                type:'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data:data['data1']
+            },
+            {
+                name:'删除',
+                type:'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'left'
+                    }
+                },
+                data:data['data2']
+            }
+        ]
+    };
+
+    fish_bone_disk.hideLoading();
+    fish_bone_disk.setOption(option);
+});
+
+$.get('/fish_bone_memory/').done(function (data) {
+    var option = {
+        title : {
+            text: data['title'],
+            subtext: '数据为当年的',
+            x:'left'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+            data:['净增', '创建', '删除']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        yAxis : [
+            {
+                type : 'category',
+                axisTick : {show: false},
+                data : data['y']
+            }
+        ],
+        series : [
+            {
+                name:'净增',
+                type:'bar',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside'
+                    }
+                },
+                data:data['data3']
+            },
+            {
+                name:'创建',
+                type:'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data:data['data1']
+            },
+            {
+                name:'删除',
+                type:'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'left'
+                    }
+                },
+                data:data['data2']
+            }
+        ]
+    };
+
+    fish_bone_memory.hideLoading();
+    fish_bone_memory.setOption(option);
+});
+
+
 // 绑定一个点击事件
 one_one.on('click', function (params) {
     // 控制台打印数据的名称
     console.log(params);
     sweetAlert(params.name)
 });
-
-
 
 // 绑定一个点击事件,生成新的图表
 top_10_industry.on('click', function (params) {
