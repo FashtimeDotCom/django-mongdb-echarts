@@ -22,6 +22,7 @@ class Db(Document):
     ClusterId = StringField()
     Role = StringField()
     State = StringField()
+    DBClass = StringField()
     DBType = StringField()
     # CreateTime = StringField()
     CreateTime = DateTimeField()
@@ -42,10 +43,23 @@ class Db(Document):
     SrcDBId = StringField()
     VirtualIP = URLField()
 
+    @queryset_manager
+    def outer(self, queryset):
+        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='No'))
+
+    @queryset_manager
+    def inner(self, queryset):
+        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
+
+    @queryset_manager
+    def top_10_industry(self, queryset):
+        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
+
     meta = {
         'collection': 't_db_instance',
-        'ordering': ['-ModifyTime'],
+        # 'ordering': ['-ModifyTime'],
     }
+
 demo = {
     "Region": "\u5317\u4eacC",
     "AzGroup": "\u5317\u4eac\u4e8c",
