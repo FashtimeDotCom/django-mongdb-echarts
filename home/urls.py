@@ -16,8 +16,10 @@ urlpatterns += [
     url(r'^topright/', inner_dbclass, name="topright"),
     url(r'^top_10_industry/', top_10_industry, name="top_10_industry"),
     url(r'^top_10_industry_further/', top_10_industry_further, name="top_10_industry_further"),
+    url(r'^top_10_company/', top_10_company, name="top_10_company"),
+    url(r'^top_10_company_further/', top_10_company_further, name="top_10_company_further"),
     url(r'^one_one/', lefttop, name="lefttop"),
     url(r'^one_two/', righttop, name="righttop"),
-    url(r'^fish_bone_disk/', fish_bone_disk, name="fish_bone_disk"),
-    url(r'^fish_bone_memory/', fish_bone_memory, name="fish_bone_memory"),
+    url(r'^fish_bone_disk/', fish_bone_disk_by_month, name="fish_bone_disk"),
+    url(r'^fish_bone_memory/', fish_bone_memory_by_month, name="fish_bone_memory"),
 ]
