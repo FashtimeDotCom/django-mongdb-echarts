@@ -55,11 +55,15 @@ class Db(Document):
         return queryset(Q(InnerMark='No'))
 
     @queryset_manager
-    def inner(self, queryset):
-        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
+    def outer_all_deleted_without_fail(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
 
     @queryset_manager
-    def top_10_industry(self, queryset):
+    def outer_without_fail(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State__ne='Fail'))
+
+    @queryset_manager
+    def inner(self, queryset):
         return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
 
     meta = {
@@ -109,11 +113,15 @@ class Db_HA(Document):
         return queryset(Q(InnerMark='No'))
 
     @queryset_manager
-    def inner(self, queryset):
-        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
+    def outer_all_deleted_without_fail(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
 
     @queryset_manager
-    def top_10_industry(self, queryset):
+    def outer_without_delete_without_fail(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
+
+    @queryset_manager
+    def inner(self, queryset):
         return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='Yes'))
 
     meta = {

@@ -1,0 +1,12 @@
+ne – not equal to
+lt – less than
+lte – less than or equal to
+gt – greater than
+gte – greater than or equal to
+not – negate a standard check, may be used before other operators (e.g. Q(age__not__mod=5))
+in – value is in list (a list of values should be provided)
+nin – value is not in list (a list of values should be provided)
+mod – value % x == y, where x and y are two provided values
+all – every item in list of values provided is in array
+size – the size of the array is
+exists – value for field exists

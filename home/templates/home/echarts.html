@@ -7,55 +7,77 @@
 {% endblock %}
 
 {% block content %}
-<div class="tm-middle">
-        <div class="uk-grid">
+{#<div class="tm-middle">#}
+        <!-- 实例净新增 -->
+        <div class="uk-grid uk-margin-top">
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <div class="uk-grid">
-                        <div class="uk-width-medium-1-2">
-                            <div id="topleft" style="height:600px;"></div>
-                        </div>
-                        <div class="uk-width-medium-1-2">
-                            <div id="topright" style="height:600px;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="uk-grid"></div>
-            </div>
-        </div>
-        <!-- 前十行业 -->
-        <div class="uk-grid">
-            <div class="uk-width-medium-1-1 uk-text-center">
-                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
-                    <div class="uk-grid">
-                        <div class="uk-width-medium-1-2">
-                            <div id="top_10_company" style="height:600px;"></div>
-                        </div>
-                        <div class="uk-width-medium-1-2">
-                            <div id="top_10_company_further" style="height:600px;">
-                                <div style="padding-top: 40%">
-                                    ◀️ 点击左侧公司查看DB类型与版本分布
-                                </div>
+                        <div class="uk-width-medium-1-1">
+
+                            <div class="uk-margin">
+                              时间粒度：
+                              <div class="uk-button-group" data-uk-button-radio>
+                                <button name="month" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">月</button>
+                                <button name="week" class="uk-button uk-button-primary uk-active" onclick="get_instance_pure_increase(this)">周</button>
+                                <button name="day" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">日</button>
+                              </div>
+                            </div>
+
+                            <div id="instance_pure_increase" style="height:600px;">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- 外部实例分布 -->
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-1 uk-text-center">
+                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
+                    <div class="uk-grid">
+                        <div class="uk-width-medium-1-1">
+                            <div id="outer" style="height:600px;"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="uk-grid"></div>
             </div>
         </div>
+
+        <!-- 内存，存储净增鱼骨图 -->
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-1 uk-text-center">
+                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
+                    <div class="uk-grid">
+                        <div class="uk-width-medium-1-2">
+                            <div id="fish_bone_memory" style="height:800px;">
+
+                            </div>
+                        </div>
+                        <div class="uk-width-medium-1-2">
+                            <div id="fish_bone_disk" style="height:800px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 前十公司 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <div class="uk-grid">
                         <div class="uk-width-medium-1-2">
-                            <div id="top_10_industry" style="height:600px;"></div>
+                            <div id="top_10_industry" style="height:800px;"></div>
                         </div>
                         <div class="uk-width-medium-1-2">
-                            <div id="top_10_industry_further" style="height:600px;">
-                                <div style="padding-top: 40%">
-                                    ◀️ 点击左侧行业查看DB类型与版本分布
-                                </div>
+                            <div id="top_10_industry_further" style="height:400px;">
+                            </div>
+                                    ◀️ 点击左侧行业查看详细信息
+                            <div id="top_10_industry_further2" style="height:400px;">
                             </div>
                         </div>
                     </div>
@@ -64,43 +86,27 @@
             </div>
         </div>
 
-        <!-- 所有DB类型分布 -->
-        <div class="uk-grid uk-margin-large-top">
-            <div class="uk-width-medium-1-1 uk-text-center">
-                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-left uk-margin-right">
-                    <div id="one_one" style="height:400px;"></div>
-                </div>
-            </div>
-        </div>
-{#        <hr class="uk-grid-divider">#}
-        <!-- 所有Role类型分布 -->
-        <div class="uk-grid">
-            <div class="uk-width-medium-1-1 uk-text-center">
-                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
-                    <div id="one_two" style="height:400px;"></div>
-                </div>
-            </div>
-        </div>
-        <!-- 鱼骨图 -->
+        <!-- 前十行业 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <div class="uk-grid">
                         <div class="uk-width-medium-1-2">
-                            <div id="fish_bone_memory" style="height:600px;">
-
-                            </div>
+                            <div id="top_10_company" style="height:800px;"></div>
                         </div>
                         <div class="uk-width-medium-1-2">
-                            <div id="fish_bone_disk" style="height:600px;">
-
+                            <div id="top_10_company_further" style="height:400px;">
+                            </div>
+                                    ◀️ 点击左侧公司查看详细信息
+                            <div id="top_10_company_further2" style="height:400px;">
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="uk-grid"></div>
             </div>
         </div>
-</div>
+{#</div>#}
 {% endblock %}
 
 {% block js %}

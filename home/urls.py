@@ -12,8 +12,8 @@ urlpatterns = [
 
 # AJAX
 urlpatterns += [
-    url(r'^topleft/', outer_dbclass, name="topleft"),
-    url(r'^topright/', inner_dbclass, name="topright"),
+    url(r'^outer/', outer_dbclass, name="outer"),
+    url(r'^inner/', inner_dbclass, name="inner"),
     url(r'^top_10_industry/', top_10_industry, name="top_10_industry"),
     url(r'^top_10_industry_further/', top_10_industry_further, name="top_10_industry_further"),
     url(r'^top_10_company/', top_10_company, name="top_10_company"),
@@ -22,4 +22,5 @@ urlpatterns += [
     url(r'^one_two/', righttop, name="righttop"),
     url(r'^fish_bone_disk/', fish_bone_disk_by_month, name="fish_bone_disk"),
     url(r'^fish_bone_memory/', fish_bone_memory_by_month, name="fish_bone_memory"),
+    url(r'^instance_pure_increase/', instance_pure_increase, name="instance_pure_increase"),
 ]
