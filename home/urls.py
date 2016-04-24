@@ -5,7 +5,8 @@ __author__ = 'kevin'
 
 
 urlpatterns = [
-    url(r'^$', IndexView.as_view(), name="index"),
+    # url(r'^$', IndexView.as_view(), name="index"),
+    url(r'^$', EchartsIndexView.as_view(), name="echarts"),
     url(r'^echarts/$', EchartsIndexView.as_view(), name="echarts"),
 ]
 
