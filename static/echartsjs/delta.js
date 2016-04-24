@@ -188,14 +188,15 @@ $.get('/top_10_industry/').done(function (data) {
                 selectedMode: 'single',
                 radius: ['30%', '60%'],
 
-                //label: {
-                //    normal: {
-                //        position: 'inner'
-                //    }
-                //},
+                label: {
+                    normal: {
+                        show: false,
+                        //position: 'inner'
+                    }
+                },
                 labelLine: {
                     normal: {
-                        show: true
+                        show: false
                     }
                 },
                 data: data['data1']
@@ -263,14 +264,15 @@ $.get('/top_10_company/').done(function (data) {
                 selectedMode: 'single',
                 radius: ['30%', '60%'],
 
-                //label: {
-                //    normal: {
-                //        position: 'inner'
-                //    }
-                //},
+                label: {
+                    normal: {
+                        show: false,
+                        //position: 'inner'
+                    }
+                },
                 labelLine: {
                     normal: {
-                        show: true
+                        show: false
                     }
                 },
                 data: data['data1']
