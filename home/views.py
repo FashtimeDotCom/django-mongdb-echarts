@@ -409,7 +409,19 @@ def instance_pure_increase(request):
         for _i in xrange(0, len(fifteen_week)):
             data['data3'].append(data['data1'][_i] - data['data2'][_i])
         # 存量
-        # TODO
+        for week in fifteen_week:
+            # 先不算删除，计算week当年所有create + 当年之前的所有create
+            created_before_this_year = Db.outer_without_fail(CreateYear__lt=_utc_now.year).count()
+            created_this_year = Db.outer_without_fail(CreateYear=_utc_now.year,
+                                                      CreateWeek__lte=week).count()
+            created = created_this_year + created_before_this_year
+            # week当年所有delete + 当年之前所有delete
+            deleted_before_this_year = Db.outer_all_deleted_without_fail(ModifyYear__lt=_utc_now.year).count()
+            deleted_this_year = Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
+                                                                  ModifyWeek__lte=week).count()
+            deleted = deleted_this_year + deleted_before_this_year
+            # 相减就是净存量
+            data['data4'].append(created - deleted)
     # 天粒度
     elif time_grading == 'day':
         data['title'] = "最近30天实例净增"
@@ -428,7 +440,19 @@ def instance_pure_increase(request):
         for _i in xrange(0, len(thirty_day)):
             data['data3'].append(data['data1'][_i] - data['data2'][_i])
         # 存量
-        # TODO
+        for day in thirty_day:
+            # 先不算删除，计算week当年所有create + 当年之前的所有create
+            created_before_this_year = Db.outer_without_fail(CreateYear__lt=_utc_now.year).count()
+            created_this_year = Db.outer_without_fail(CreateYear=_utc_now.year,
+                                                      CreateDay__lte=day).count()
+            created = created_this_year + created_before_this_year
+            # week当年所有delete + 当年之前所有delete
+            deleted_before_this_year = Db.outer_all_deleted_without_fail(ModifyYear__lt=_utc_now.year).count()
+            deleted_this_year = Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
+                                                                  ModifyDay__lte=day).count()
+            deleted = deleted_this_year + deleted_before_this_year
+            # 相减就是净存量
+            data['data4'].append(created - deleted)
     else:
         pass
     # print data
