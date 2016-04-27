@@ -1,17 +1,23 @@
 # coding:utf8
 from __future__ import division
-from .models import Db, Db_HA
 # Create your views here.
 from django.views.generic import TemplateView
 import calendar
 from datetime import timedelta
+import time
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 import pytz
 import datetime
-from udbshow.settings import TIME_ZONE
 from operator import itemgetter
+from aggregation import *
+import math
 
+global zero_time, zero_timestamp
+zero_timestamp = 1356969600
+zero_time = time.localtime(zero_timestamp)
+print zero_time
+# time.struct_time(tm_year=2013, tm_mon=1, tm_mday=1, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=1, tm_isdst=0)
 
 class IndexView(TemplateView):
     template_name = "home/index.html"
@@ -23,6 +29,7 @@ class IndexView(TemplateView):
         return context
 
 
+# 数据库转换为local时间，不需要了
 def utc_to_local(utc_dt):
     # get integer timestamp to avoid precision lost
     timestamp = calendar.timegm(utc_dt.timetuple())
@@ -31,6 +38,7 @@ def utc_to_local(utc_dt):
     return local_dt.replace(microsecond=utc_dt.microsecond)
 
 
+# 数据库转换为local时间，不需要了
 def local_to_utc(local_dt, time_zone):
     local = pytz.timezone(time_zone)
     local_dt = local.localize(local_dt, is_dst=None)
@@ -41,7 +49,7 @@ class EchartsIndexView(TemplateView):
     template_name = "home/echarts.html"
 
 
-print "共{}个".format(Db.objects.count())
+# print "共{}个".format(Db.objects.count())
 
 
 def field_count(field):
@@ -54,12 +62,12 @@ def field_count(field):
 
 @csrf_exempt
 def outer_dbclass(request):
-    data = dict()
-    # 图左下角的列表
-    data['data'] = Db.outer.order_by('DBClass').distinct('DBType')
-    data['data1'] = []
-    data['data2'] = []
-    data['data3'] = []
+    data = {
+        'data': Db.outer.order_by('DBClass').distinct('DBType'),
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
     # 获得不同DBClass的所有名字和数量
     # 排序为了保证列表顺序
     for dbclass in Db.outer.order_by('DBClass').distinct('DBClass'):
@@ -88,12 +96,63 @@ def outer_dbclass(request):
             # HA
             for v in Db.outer(DBClass=dbclass, ClusterId__ne='').distinct('DBType'):
                 data['data3'].append({'value': Db.outer(DBClass=dbclass, ClusterId__ne='', DBType=v).count(), 'name': v})
-            # for ha in Db.outer(DBClass=dbclass).distinct('InstanceMode'):
-            #     for v in Db.outer(DBClass=dbclass, InstanceMode=ha).distinct('DBType'):
-            #         data['data3'].append({'value': Db.outer(DBClass=dbclass, InstanceMode=ha, DBType=v).count(), 'name': v})
         else:
             for v in Db.outer(DBClass=dbclass).distinct('DBType'):
                 data['data3'].append({'value': Db.outer(DBClass=dbclass, DBType=v).count(), 'name': v})
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def outer_disk_type(request):
+    data = {
+        'data': Db.outer.order_by('DBClass').distinct('DiskType'),
+        'data1': []
+    }
+    for disktype in data['data']:
+        data['data1'].append({'value': Db.outer(DiskType=disktype).count(), 'name': disktype})
+    return JsonResponse(data, safe=False)
+
+
+# 需求改变，so...废弃
+@csrf_exempt
+def outer_disk_type_backup(request):
+    data = {
+        'data': Db.outer.order_by('DBClass').distinct('DiskType'),
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
+    # 获得不同DBClass的所有名字和数量
+    # 排序为了保证列表顺序
+    for dbclass in Db.outer.order_by('DBClass').distinct('DBClass'):
+        data['data1'].append({'value': Db.outer(DBClass=dbclass).count(), 'name': dbclass})
+
+    # 获得区分是否HA的MySQL的所有名字和数量
+    # 排序为了保证列表顺序
+    for dbclass in Db.outer.order_by('DBClass').distinct('DBClass'):
+        if dbclass == 'MySQL':
+            # 非HA
+            data['data2'].append({'value': Db.outer(DBClass=dbclass, ClusterId='').count(), 'name': 'Nomal'})
+            # HA
+            data['data2'].append({'value': Db.outer(DBClass=dbclass, ClusterId__ne='').count(), 'name': 'HA'})
+            # for ha in Db.outer(DBClass=dbclass).distinct('InstanceMode'):
+            #     data['data2'].append({'value': Db.outer(DBClass=dbclass, InstanceMode=ha).count(), 'name': ha})
+        else:
+            data['data2'].append({'value': Db.outer(DBClass=dbclass).count(), 'name': dbclass})
+
+    # 获得区分是否HA、不同版本的DB的所有名字和数量
+    # 排序为了保证列表顺序
+    for dbclass in Db.outer.order_by('DBClass').distinct('DBClass'):
+        if dbclass == 'MySQL':
+            # 非HA
+            for v in Db.outer(DBClass=dbclass, ClusterId='').distinct('DiskType'):
+                data['data3'].append({'value': Db.outer(DBClass=dbclass, ClusterId='', DiskType=v).count(), 'name': v})
+            # HA
+            for v in Db.outer(DBClass=dbclass, ClusterId__ne='').distinct('DiskType'):
+                data['data3'].append({'value': Db.outer(DBClass=dbclass, ClusterId__ne='', DiskType=v).count(), 'name': v})
+        else:
+            for v in Db.outer(DBClass=dbclass).distinct('DiskType'):
+                data['data3'].append({'value': Db.outer(DBClass=dbclass, DiskType=v).count(), 'name': v})
     return JsonResponse(data, safe=False)
 
 
@@ -151,12 +210,10 @@ def top_10_industry(request):
     top_10_industry_tuple = []
     industries = Db.outer.item_frequencies('Industry', normalize=True)
     top_industries = sorted(industries.items(), key=itemgetter(1), reverse=True)[:10]
-    for t, f in top_industries:
+    for t, _ in top_industries:
         top_10_industry_tuple.append((t, Db.outer(Industry=t).count()))
     # 图左下角的列表
-    data['data'] = [i for i, j in top_10_industry_tuple]
-    # 获得不同DBClass的所有名字和数量
-    # 排序为了保证列表顺序
+    data['data'] = [i for i, _ in top_10_industry_tuple]
     for industry, count in top_10_industry_tuple:
         data['data1'].append({'value': count, 'name': industry})
     return JsonResponse(data, safe=False)
@@ -170,12 +227,13 @@ def top_10_industry_further(request):
     data = dict()
     # 图左下角的列表
     data = {
-        'title': u"*{}*DB类型与版本分布".format(industry),
+        'title': u"*{}*".format(industry),
         'data': db_version_list,
         'data1': [],
         'data2': [],
         'data3': [],
         'data4': [],
+        'data5': [],
     }
     # 环装饼图 ------------
     # 获得不同DBClass的所有名字和数量
@@ -210,9 +268,10 @@ def top_10_industry_further(request):
         else:
             for v in Db.outer(Industry=industry, DBClass=dbclass).distinct('DBType'):
                 data['data3'].append({'value': Db.outer(Industry=industry, DBClass=dbclass, DBType=v).count(), 'name': v})
-    # 条形图 disk&memory
-    data['data4'].append(Db.outer(Industry=industry).sum('DiskSpace'))
-    data['data4'].append(Db.outer(Industry=industry).sum('MemoryLimit') / 1024)
+    # 饼图 disk type
+    data['data4'] = Db.outer(Industry=industry).order_by('DBClass').distinct('DiskType')
+    for disktype in data['data4']:
+        data['data5'].append({'value': Db.outer(Industry=industry, DiskType=disktype).count(), 'name': disktype})
     return JsonResponse(data, safe=False)
 
 
@@ -225,10 +284,10 @@ def top_10_company(request):
     top_10_company_list = []
     companies = Db.outer.item_frequencies('CompanyName', normalize=True)
     top_companies = sorted(companies.items(), key=itemgetter(1), reverse=True)[:10]
-    for t, f in top_companies:
+    for t, _ in top_companies:
         top_10_company_list.append((t, Db.outer(CompanyName=t).count()))
     # 图左下角的列表
-    data['category'] = [i for i, j in top_10_company_list]
+    data['category'] = [i for i, _ in top_10_company_list]
     for company, count in top_10_company_list:
         data['data1'].append({'value': count, 'name': company})
     return JsonResponse(data, safe=False)
@@ -241,12 +300,13 @@ def top_10_company_further(request):
     db_class_list = Db.outer(CompanyName=company).distinct('DBClass')
     data = {
 
-        'title': u"*{}*DB类型与版本分布".format(company),
+        'title': u"*{}*".format(company),
         'category': db_version_list,
         'data1': [],
         'data2': [],
         'data3': [],
         'data4': [],
+        'data5': [],
     }
     # 环装饼图 ------------
     # DBClass
@@ -277,9 +337,10 @@ def top_10_company_further(request):
         else:
             for v in Db.outer(CompanyName=company, DBClass=dbclass).distinct('DBType'):
                 data['data3'].append({'value': Db.outer(CompanyName=company, DBClass=dbclass, DBType=v).count(), 'name': v})
-    # 条形图 disk&memory
-    data['data4'].append(Db.outer(CompanyName=company).sum('DiskSpace'))
-    data['data4'].append(Db.outer(CompanyName=company).sum('MemoryLimit') / 1024)
+    # 饼图 disk type
+    data['data4'] = Db.outer(CompanyName=company).order_by('DBClass').distinct('DiskType')
+    for disktype in data['data4']:
+        data['data5'].append({'value': Db.outer(CompanyName=company, DiskType=disktype).count(), 'name': disktype})
     return JsonResponse(data, safe=False)
 
 
@@ -305,20 +366,22 @@ def righttop(request):
 
 @csrf_exempt
 def fish_bone_disk_by_month(request):
-    data = dict()
-    data['title'] = 'disk space净新增(GB)'
-    data['data1'] = []
-    data['data2'] = []
-    data['data3'] = []
-    _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
-    seven_month_list = [month for month in range(_utc_now.month - 11, _utc_now.month+1) if month > 0]
-    data['y'] = ["{}月".format(_i) for _i in seven_month_list]
-    for month in seven_month_list:
-        data['data1'].append(Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                   CreateMonth=month).sum('DiskSpace'))
-        data['data2'].append(0 - Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                   ModifyMonth=month).sum('DiskSpace'))
-    for _i in xrange(0, len(seven_month_list)):
+    data = {
+        'title': 'disk space净新增(GB)',
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
+    _local_now = datetime.datetime.now()
+    current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+    twelve_business_month = xrange(current_business_month-5, current_business_month+1)
+    data['y'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+    # seven_month_list = [month for month in range(_local_now.month - 11, _local_now.month+1) if month > 0]
+    # data['y'] = ["{}月".format(_i) for _i in seven_month_list]
+    for month in twelve_business_month:
+        data['data1'].append(int(round(Db.outer_all(BusinessCreateMonth=month).sum('DiskSpace') / 1024)))
+        data['data2'].append(int(round(0 - Db.outer_all_deleted(BusinessDeleteMonth=month,).sum('DiskSpace') / 1024)))
+    for _i in xrange(0, len(twelve_business_month)):
         data['data3'].append(data['data1'][_i] + data['data2'][_i])
     return JsonResponse(data, safe=False)
 
@@ -326,22 +389,21 @@ def fish_bone_disk_by_month(request):
 @csrf_exempt
 def fish_bone_memory_by_month(request):
     data = {
-        'title': 'memory limit净新增(MB)',
+        'title': 'memory limit净新增(TB)',
         'data1': [],
         'data2': [],
         'data3': [],
     }
-    _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
-    seven_month_list = [month for month in range(_utc_now.month - 11, _utc_now.month+1) if month > 0]
-    data['y'] = ["{}月".format(_i) for _i in seven_month_list]
-    for month in seven_month_list:
+    _local_now = datetime.datetime.now()
+    current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+    twelve_business_month = xrange(current_business_month-5, current_business_month+1)
+    data['y'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+    for month in twelve_business_month:
         # 当月创建
-        data['data1'].append(Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                   CreateMonth=month).sum('MemoryLimit'))
+        data['data1'].append(int(round(Db.outer_all(BusinessCreateMonth=month).sum('MemoryLimit') / 1024)))
         # 当月删除
-        data['data2'].append(0 - Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                   ModifyMonth=month,).sum('MemoryLimit'))
-    for _i in xrange(0, len(seven_month_list)):
+        data['data2'].append(int(round(0 - Db.outer_all_deleted(BusinessDeleteMonth=month,).sum('MemoryLimit') / 1024)))
+    for _i in xrange(0, len(twelve_business_month)):
         data['data3'].append(data['data1'][_i] + data['data2'][_i])
     return JsonResponse(data, safe=False)
 
@@ -361,99 +423,70 @@ def instance_pure_increase(request):
     }
     # 月粒度
     if time_grading == 'month':
-        data['title'] = "当年实例净增"
-        _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
-        twelve_month = [month for month in range(_utc_now.month-11, _utc_now.month+1) if month > 0]
-        data['xAxis'] = [u'{}月'.format(month) for month in twelve_month]
+        data['title'] = "实例数量申请/删除/净增/存量"
+        _local_now = datetime.datetime.now()
+        current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+        twelve_business_month = xrange(current_business_month-11, current_business_month+1)
+        data['xAxis'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
         # 当月申请
-        for month in twelve_month:
-            data['data1'].append(Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                       CreateMonth=month).count())
+        for month in twelve_business_month:
+            data['data1'].append(Db.outer_all(BusinessCreateMonth=month).count())
         # 当月删除
-        for month in twelve_month:
-            data['data2'].append(Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                   ModifyMonth=month).count())
+        for month in twelve_business_month:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteMonth=month).count())
         # 净申请
-        for _i in xrange(0, len(twelve_month)):
+        for _i in xrange(0, len(twelve_business_month)):
             data['data3'].append(data['data1'][_i] - data['data2'][_i])
+
         # 存量
-        for month in twelve_month:
-            # 先不算删除，计算month当年所有create + 当年之前的所有create
-            created_before_this_year = Db.outer_without_fail(CreateYear__lt=_utc_now.year).count()
-            created_this_year = Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                      CreateMonth__lte=month).count()
-            created = created_this_year + created_before_this_year
-            # month当年所有delete + 当年之前所有delete
-            deleted_before_this_year = Db.outer_all_deleted_without_fail(ModifyYear__lt=_utc_now.year).count()
-            deleted_this_year = Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                  ModifyMonth__lte=month).count()
-            deleted = deleted_this_year + deleted_before_this_year
-            # 相减就是净存量
-            data['data4'].append(created - deleted)
+        for month in twelve_business_month:
+            data['data4'].append(get_duration_by_month(month))
     # 周粒度
     elif time_grading == 'week':
         data['title'] = "最近15周实例净增"
-        _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
-        fifteen_week = [week for week in range(int(_utc_now.strftime("%U"))-14,
-                                               int(_utc_now.strftime("%U"))+1) if week > 0]
-        data['xAxis'] = [u'第{}周'.format(week) for week in fifteen_week]
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+        fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
+        data['xAxis'] = [u'第{}周'.format(week) for week in fifteen_business_week]
         # 当周申请
-        for week in fifteen_week:
-            data['data1'].append(Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                       CreateWeek=week).count())
+        for week in fifteen_business_week:
+            data['data1'].append(Db.outer_all(BusinessCreateWeek=week).count())
         # 当周删除
-        for week in fifteen_week:
-            data['data2'].append(Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                   ModifyWeek=week).count())
+        for week in fifteen_business_week:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteWeek=week).count())
         # 净申请
-        for _i in xrange(0, len(fifteen_week)):
+        for _i in xrange(0, len(fifteen_business_week)):
             data['data3'].append(data['data1'][_i] - data['data2'][_i])
         # 存量
-        for week in fifteen_week:
-            # 先不算删除，计算week当年所有create + 当年之前的所有create
-            created_before_this_year = Db.outer_without_fail(CreateYear__lt=_utc_now.year).count()
-            created_this_year = Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                      CreateWeek__lte=week).count()
-            created = created_this_year + created_before_this_year
-            # week当年所有delete + 当年之前所有delete
-            deleted_before_this_year = Db.outer_all_deleted_without_fail(ModifyYear__lt=_utc_now.year).count()
-            deleted_this_year = Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                  ModifyWeek__lte=week).count()
-            deleted = deleted_this_year + deleted_before_this_year
-            # 相减就是净存量
-            data['data4'].append(created - deleted)
+        for week in fifteen_business_week:
+            data['data4'].append(get_duration_by_week(week))
     # 天粒度
     elif time_grading == 'day':
         data['title'] = "最近30天实例净增"
-        _utc_now = local_to_utc(datetime.datetime.now(), TIME_ZONE)
-        thirty_day = [day for day in range(int(_utc_now.strftime("%j"))-29, int(_utc_now.strftime("%j"))+1) if day > 0]
-        data['xAxis'] = [u'{}'.format((_utc_now + timedelta(days=i)).date()) for i in range(-29, 1)]
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
+        thirty_business_day = xrange(current_business_day - 29, current_business_day + 1)
+        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).date()) for i in range(-29, 1)]
         # 当日申请
-        for day in thirty_day:
-            data['data1'].append(Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                       CreateDay=day).count())
+        for day in thirty_business_day:
+            data['data1'].append(Db.outer_all(BusinessCreateDay=day).count())
         # 当日删除
-        for day in thirty_day:
-            data['data2'].append(Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                   ModifyDay=day).count())
+        for day in thirty_business_day:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteDay=day).count())
         # 净申请
-        for _i in xrange(0, len(thirty_day)):
+        for _i in xrange(0, len(thirty_business_day)):
             data['data3'].append(data['data1'][_i] - data['data2'][_i])
         # 存量
-        for day in thirty_day:
-            # 先不算删除，计算week当年所有create + 当年之前的所有create
-            created_before_this_year = Db.outer_without_fail(CreateYear__lt=_utc_now.year).count()
-            created_this_year = Db.outer_without_fail(CreateYear=_utc_now.year,
-                                                      CreateDay__lte=day).count()
-            created = created_this_year + created_before_this_year
-            # week当年所有delete + 当年之前所有delete
-            deleted_before_this_year = Db.outer_all_deleted_without_fail(ModifyYear__lt=_utc_now.year).count()
-            deleted_this_year = Db.outer_all_deleted_without_fail(ModifyYear=_utc_now.year,
-                                                                  ModifyDay__lte=day).count()
-            deleted = deleted_this_year + deleted_before_this_year
-            # 相减就是净存量
-            data['data4'].append(created - deleted)
+        for day in thirty_business_day:
+            data['data4'].append(get_duration_by_day(day))
     else:
         pass
     # print data
     return JsonResponse(data, safe=False)
+
+
+# print get_duration_by_month(40)
+# print get_delta_by_month(39)
+# print get_delta_by_day(1100)

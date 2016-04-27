@@ -63,12 +63,12 @@ class Db(Document):
         return queryset(Q(InnerMark='No'))
 
     @queryset_manager
-    def outer_all_deleted_without_fail(self, queryset):
-        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
+    def outer_all_deleted(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State='Delete'))
 
     @queryset_manager
-    def outer_without_fail(self, queryset):
-        return queryset(Q(InnerMark='No') & Q(State__ne='Fail'))
+    def outer_all(self, queryset):
+        return queryset(Q(InnerMark='No'))
 
     @queryset_manager
     def inner(self, queryset):

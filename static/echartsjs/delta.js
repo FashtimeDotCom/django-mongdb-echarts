@@ -2,6 +2,7 @@
  * Created by kevin on 16/4/17.
  */
 var outer = echarts.init(document.getElementById('outer'));
+var outer_disk_type = echarts.init(document.getElementById('outer_disk_type'));
 //var inner = echarts.init(document.getElementById('inner'));
 var top_10_industry = echarts.init(document.getElementById('top_10_industry'));
 var top_10_company = echarts.init(document.getElementById('top_10_company'));
@@ -12,6 +13,7 @@ var fish_bone_memory = echarts.init(document.getElementById('fish_bone_memory'))
 var instance_pure_increase = echarts.init(document.getElementById('instance_pure_increase'));
 
 outer.showLoading();
+outer_disk_type.showLoading();
 //inner.showLoading();
 top_10_industry.showLoading();
 top_10_company.showLoading();
@@ -24,7 +26,7 @@ instance_pure_increase.showLoading();
 $.get('/outer/').done(function (data) {
     var option = {
         title : {
-            text: '外部DB类型与版本分布',
+            text: '外部DB类型 & 版本分布',
             //subtext: '纯属虚构',
             x:'center'
         },
@@ -90,6 +92,44 @@ $.get('/outer/').done(function (data) {
     };
     outer.setOption(option);
     outer.hideLoading();
+});
+
+$.get('/outer_disk_type/').done(function (data) {
+    var option = {
+        title : {
+            text: '外部DB类型 & 磁盘类型分布',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            y: 'bottom',
+            data: data['data']
+        },
+        series: [
+                    {
+                        name: '磁盘类型',
+                        type: 'pie',
+                        //radius : '55%',
+                        //center: ['50%', '60%'],
+                        data: data['data1'],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+    };
+    outer_disk_type.setOption(option);
+    outer_disk_type.hideLoading();
 });
 
 //
@@ -200,36 +240,7 @@ $.get('/top_10_industry/').done(function (data) {
                     }
                 },
                 data: data['data1']
-            },
-            //{
-            //    name: 'MySQL是否高可用',
-            //    type: 'pie',
-            //    radius: ['45%', '65%'],
-            //
-            //    label: {
-            //        normal: {
-            //            position: 'inner'
-            //        }
-            //    },
-            //
-            //    data: data['data2']
-            //},
-            //{
-            //    name: '数据库版本',
-            //    type: 'pie',
-            //    radius: ['70%', '80%'],
-            //
-            //    data: data['data3'],
-            //    itemStyle: {
-            //        normal: {
-            //            color: function(params) {
-            //                // 构建自己想要的颜色库
-            //                var colorList = ['#C1232B','#B5C334','#FCCE10', '#E87C25','#27727B','#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD', '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'];
-            //                return colorList[params.dataIndex]
-            //            }
-            //        }
-            //    }
-            //}
+            }
         ]
     };
     top_10_industry.setOption(option);
@@ -358,7 +369,7 @@ $.get('/fish_bone_memory/').done(function (data) {
     var option = {
         title : {
             text: data['title'],
-            subtext: '数据为当年的',
+            subtext: '数据为最近6个月',
             x:'left'
         },
         tooltip : {
@@ -434,7 +445,7 @@ $.get('/fish_bone_disk/').done(function (data) {
     var option = {
         title : {
             text: data['title'],
-            subtext: '数据为当年的',
+            subtext: '数据为最近6个月',
             x:'left'
         },
         tooltip : {
@@ -512,7 +523,7 @@ function get_instance_pure_increase(button) {
         var option = {
             title: {
                 text: data['title'],
-                subtext: '数据为当年的'
+                subtext: '粒度包括最近12个月/最近15周/最近30天'
             },
             tooltip: {
                 trigger: 'axis'
@@ -621,7 +632,7 @@ function get_instance_pure_increase(button) {
         instance_pure_increase.setOption(option);
     });
 }
-get_instance_pure_increase({'name': 'week'});
+get_instance_pure_increase({'name': 'month'});
 
 // 绑定一个点击事件,生成新的图表
 top_10_industry.on('click', function (params) {
@@ -635,7 +646,7 @@ top_10_industry.on('click', function (params) {
         $.get('/top_10_industry_further/', {'Industry': params.name}).done(function (data) {
             var option = {
                 title: {
-                    text: data['title'],
+                    text: data['title'] + "行业DB类型与版本分布",
                     //subtext: '纯属虚构',
                     x: 'left',
                     textStyle: {
@@ -705,33 +716,40 @@ top_10_industry.on('click', function (params) {
             top_10_industry_further.setOption(option);
             top_10_industry_further.hideLoading();
             var option2 = {
-                title: {
-                    text: 'disk-space & memory-limit',
+                title : {
+                    text: data['title'] + "行业磁盘类型分布",
+                    //subtext: '纯属虚构',
+                    x: 'left',
                     textStyle: {
                         fontSize: 10
                     }
                 },
-                tooltip: {},
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
                 legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    y: 'bottom',
+                    data: data['data4']
                 },
-                xAxis: {
-                    data: ["disk-space","memory-limit"]
-                },
-                yAxis: {},
-                series: [{
-                    name: '单位：GB',
-                    type: 'bar',
-                    data: data['data4'],
-                    itemStyle: {
-                        normal: {
-                            color: function (params) {
-                                // 构建自己想要的颜色库
-                                var colorList = ['#27727B', '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD', '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'];
-                                return colorList[params.dataIndex]
+                series : [
+                    {
+                        name: '磁盘类型',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data: data['data5'],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         }
                     }
-                }]
+                ]
             };
             top_10_industry_further2.setOption(option2);
             top_10_industry_further2.hideLoading();
@@ -751,7 +769,7 @@ top_10_company.on('click', function (params) {
         $.get('/top_10_company_further/', {'CompanyName': params.name}).done(function (data) {
             var option = {
                 title: {
-                    text: data['title'],
+                    text: data['title'] + "DB类型与版本分布",
                     //subtext: '纯属虚构',
                     x: 'left',
                     textStyle: {
@@ -821,33 +839,40 @@ top_10_company.on('click', function (params) {
             top_10_company_further.setOption(option);
             top_10_company_further.hideLoading();
             var option2 = {
-                title: {
-                    text: 'disk-space & memory-limit',
+                title : {
+                    text: data['title'] + "磁盘类型分布",
+                    //subtext: '纯属虚构',
+                    x: 'left',
                     textStyle: {
                         fontSize: 10
                     }
                 },
-                tooltip: {},
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
                 legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    y: 'bottom',
+                    data: data['data4']
                 },
-                xAxis: {
-                    data: ["disk-space","memory-limit"]
-                },
-                yAxis: {},
-                series: [{
-                    name: '单位：GB',
-                    type: 'bar',
-                    data: data['data4'],
-                    itemStyle: {
-                        normal: {
-                            color: function (params) {
-                                // 构建自己想要的颜色库
-                                var colorList = ['#27727B', '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD', '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'];
-                                return colorList[params.dataIndex]
+                series : [
+                    {
+                        name: '磁盘类型',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data: data['data5'],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         }
                     }
-                }]
+                ]
             };
             top_10_company_further2.setOption(option2);
             top_10_company_further2.hideLoading();

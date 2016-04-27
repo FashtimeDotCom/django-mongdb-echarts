@@ -14,6 +14,7 @@ urlpatterns = [
 # AJAX
 urlpatterns += [
     url(r'^outer/', outer_dbclass, name="outer"),
+    url(r'^outer_disk_type/', outer_disk_type, name="outer_disk_type"),
     url(r'^inner/', inner_dbclass, name="inner"),
     url(r'^top_10_industry/', top_10_industry, name="top_10_industry"),
     url(r'^top_10_industry_further/', top_10_industry_further, name="top_10_industry_further"),

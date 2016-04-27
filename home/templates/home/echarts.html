@@ -18,8 +18,8 @@
                             <div class="uk-margin">
                               时间粒度：
                               <div class="uk-button-group" data-uk-button-radio>
-                                <button name="month" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">月</button>
-                                <button name="week" class="uk-button uk-button-primary uk-active" onclick="get_instance_pure_increase(this)">周</button>
+                                <button name="month" class="uk-button uk-button-primary uk-active" onclick="get_instance_pure_increase(this)">月</button>
+                                <button name="week" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">周</button>
                                 <button name="day" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">日</button>
                               </div>
                             </div>
@@ -36,8 +36,11 @@
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <div class="uk-grid">
-                        <div class="uk-width-medium-1-1">
+                        <div class="uk-width-medium-1-2">
                             <div id="outer" style="height:600px;"></div>
+                        </div>
+                        <div class="uk-width-medium-1-2">
+                            <div id="outer_disk_type" style="height:600px;"></div>
                         </div>
                     </div>
                 </div>
@@ -65,7 +68,7 @@
             </div>
         </div>
 
-        <!-- 前十公司 -->
+        <!-- 前十行业 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
@@ -74,10 +77,10 @@
                             <div id="top_10_industry" style="height:800px;"></div>
                         </div>
                         <div class="uk-width-medium-1-2">
-                            <div id="top_10_industry_further" style="height:400px;">
+                            <div id="top_10_industry_further2" style="height:400px;">
                             </div>
                                     ◀️ 点击左侧行业查看详细信息
-                            <div id="top_10_industry_further2" style="height:400px;">
+                            <div id="top_10_industry_further" style="height:400px;">
                             </div>
                         </div>
                     </div>
@@ -86,7 +89,7 @@
             </div>
         </div>
 
-        <!-- 前十行业 -->
+        <!-- 前十公司 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
@@ -95,10 +98,10 @@
                             <div id="top_10_company" style="height:800px;"></div>
                         </div>
                         <div class="uk-width-medium-1-2">
-                            <div id="top_10_company_further" style="height:400px;">
+                            <div id="top_10_company_further2" style="height:400px;">
                             </div>
                                     ◀️ 点击左侧公司查看详细信息
-                            <div id="top_10_company_further2" style="height:400px;">
+                            <div id="top_10_company_further" style="height:400px;">
                             </div>
                         </div>
                     </div>
