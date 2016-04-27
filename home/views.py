@@ -16,8 +16,8 @@ import math
 global zero_time, zero_timestamp
 zero_timestamp = 1356969600
 zero_time = time.localtime(zero_timestamp)
-print zero_time
 # time.struct_time(tm_year=2013, tm_mon=1, tm_mday=1, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=1, tm_isdst=0)
+
 
 class IndexView(TemplateView):
     template_name = "home/index.html"
@@ -27,6 +27,12 @@ class IndexView(TemplateView):
         context['asd'] = "123"
         context['current_page'] = "home"
         return context
+
+
+def business_week_to_date(week=None):
+    timestamp = (week - 1) * 86400 * 7 + zero_timestamp
+    local_dt = datetime.datetime.fromtimestamp(timestamp)
+    return local_dt.date()
 
 
 # 数据库转换为local时间，不需要了
@@ -448,7 +454,7 @@ def instance_pure_increase(request):
         current_timestamp = time.mktime(_local_now.timetuple())
         current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
         fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
-        data['xAxis'] = [u'第{}周'.format(week) for week in fifteen_business_week]
+        data['xAxis'] = [u'{}周-{}'.format(week, business_week_to_date(week)) for week in fifteen_business_week]
         # 当周申请
         for week in fifteen_business_week:
             data['data1'].append(Db.outer_all(BusinessCreateWeek=week).count())
