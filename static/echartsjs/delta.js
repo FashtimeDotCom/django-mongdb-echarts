@@ -123,7 +123,7 @@ $.get('/outer_disk_type/').done(function (data) {
                     {
                         name: '磁盘类型',
                         type: 'pie',
-                        //radius : '55%',
+                        radius : '65%',
                         //center: ['50%', '60%'],
                         data: data['data1'],
                         itemStyle: {
@@ -410,6 +410,12 @@ $.get('/top_10_company_memory_limit/').done(function (data) {
         //        fontSize: 9,
         //        //fontStyle: 'italic'
         //    }
+        //},
+        //grid: {
+        //    left: '30%',
+        //    right: '4%',
+        //    bottom: '3%',
+        //    containLabel: false
         //},
         series: [
             {
