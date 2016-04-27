@@ -122,19 +122,19 @@ class Db_HA(Document):
 
     @queryset_manager
     def outer(self, queryset):
-        return queryset(Q(State__ne='Fail') & Q(State__ne='Delete') & Q(InnerMark='No'))
+        return queryset(Q(State__ne='Delete') & Q(InnerMark='No'))
 
     @queryset_manager
     def outer_with_delete_and_fail(self, queryset):
         return queryset(Q(InnerMark='No'))
 
     @queryset_manager
-    def outer_all_deleted_without_fail(self, queryset):
-        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
+    def outer_all_deleted(self, queryset):
+        return queryset(Q(InnerMark='No') & Q(State='Delete'))
 
     @queryset_manager
-    def outer_without_delete_without_fail(self, queryset):
-        return queryset(Q(InnerMark='No') & Q(State__ne='Fail') & Q(State='Delete'))
+    def outer_all(self, queryset):
+        return queryset(Q(InnerMark='No'))
 
     @queryset_manager
     def inner(self, queryset):

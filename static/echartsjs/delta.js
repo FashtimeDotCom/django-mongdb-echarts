@@ -5,7 +5,11 @@ var outer = echarts.init(document.getElementById('outer'));
 var outer_disk_type = echarts.init(document.getElementById('outer_disk_type'));
 //var inner = echarts.init(document.getElementById('inner'));
 var top_10_industry = echarts.init(document.getElementById('top_10_industry'));
+var top_10_industry_memory_limit = echarts.init(document.getElementById('top_10_industry_memory_limit'));
+var top_10_industry_disk_space = echarts.init(document.getElementById('top_10_industry_disk_space'));
 var top_10_company = echarts.init(document.getElementById('top_10_company'));
+var top_10_company_memory_limit = echarts.init(document.getElementById('top_10_company_memory_limit'));
+var top_10_company_disk_space = echarts.init(document.getElementById('top_10_company_disk_space'));
 //var one_one = echarts.init(document.getElementById('one_one'));
 //var one_two = echarts.init(document.getElementById('one_two'));
 var fish_bone_disk = echarts.init(document.getElementById('fish_bone_disk'));
@@ -16,7 +20,11 @@ outer.showLoading();
 outer_disk_type.showLoading();
 //inner.showLoading();
 top_10_industry.showLoading();
+top_10_industry_memory_limit.showLoading();
+top_10_industry_disk_space.showLoading();
 top_10_company.showLoading();
+top_10_company_memory_limit.showLoading();
+top_10_company_disk_space.showLoading();
 //one_two.showLoading();
 //one_one.showLoading();
 fish_bone_disk.showLoading();
@@ -204,16 +212,17 @@ $.get('/outer_disk_type/').done(function (data) {
 //    topright.hideLoading();
 //});
 
-$.get('/top_10_industry/').done(function (data) {
+// 行业
+$.get('/top_10_industry_count/').done(function (data) {
     var option = {
         title : {
-            text: '行业前十（详情请点击相应扇图）',
+            text: '实例数量前十的行业（DB版本/磁盘类型分布，请点击相应扇图）',
             //subtext: '纯属虚构',
             x:'center'
         },
         tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b}: {c}"
+            formatter: "{a} <br/>{b}: {c} (个)"
         },
         legend: {
             orient: 'vertical',
@@ -247,16 +256,103 @@ $.get('/top_10_industry/').done(function (data) {
     top_10_industry.hideLoading();
 });
 
-$.get('/top_10_company/').done(function (data) {
+$.get('/top_10_industry_memory_limit/').done(function (data) {
     var option = {
         title : {
-            text: '公司前十（详情请点击相应扇图）',
+            text: '内存总量前十的行业 (GB)',
             //subtext: '纯属虚构',
             x:'center'
         },
         tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b}: {c}"
+            formatter: "{a} <br/>{b}: {c} (GB)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            y: 'bottom',
+            data: data['data']
+        },
+        series: [
+            {
+                name: '行业',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
+            }
+        ]
+    };
+    top_10_industry_memory_limit.setOption(option);
+    top_10_industry_memory_limit.hideLoading();
+});
+
+$.get('/top_10_industry_disk_space/').done(function (data) {
+    var option = {
+        title : {
+            text: '磁盘总量前十的行业 (TB)',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (TB)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            y: 'bottom',
+            data: data['data']
+        },
+        series: [
+            {
+                name: '行业',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
+            }
+        ]
+    };
+    top_10_industry_disk_space.setOption(option);
+    top_10_industry_disk_space.hideLoading();
+});
+
+// 公司
+$.get('/top_10_company_count/').done(function (data) {
+    var option = {
+        title : {
+            text: '实例数量前十的公司（DB版本/磁盘类型分布，请点击相应扇图）',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (个)"
         },
         legend: {
             orient: 'vertical',
@@ -292,6 +388,100 @@ $.get('/top_10_company/').done(function (data) {
     };
     top_10_company.setOption(option);
     top_10_company.hideLoading();
+});
+
+$.get('/top_10_company_memory_limit/').done(function (data) {
+    var option = {
+        title : {
+            text: '内存总量前十的公司 (GB)',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (GB)"
+        },
+        //legend: {
+        //    orient: 'vertical',
+        //    x: 'left',
+        //    y: 'bottom',
+        //    data: data['category'],
+        //    textStyle: {
+        //        fontSize: 9,
+        //        //fontStyle: 'italic'
+        //    }
+        //},
+        series: [
+            {
+                name: '公司',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
+            }
+        ]
+    };
+    top_10_company_memory_limit.setOption(option);
+    top_10_company_memory_limit.hideLoading();
+});
+
+$.get('/top_10_company_disk_space/').done(function (data) {
+    var option = {
+        title : {
+            text: '磁盘总量前十的公司 (TB)',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (TB)"
+        },
+        //legend: {
+        //    orient: 'vertical',
+        //    x: 'right',
+        //    y: 'bottom',
+        //    data: data['category'],
+        //    textStyle: {
+        //        //fontSize: 9,
+        //        //fontStyle: 'italic'
+        //    }
+        //},
+        series: [
+            {
+                name: '公司',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
+            }
+        ]
+    };
+    top_10_company_disk_space.setOption(option);
+    top_10_company_disk_space.hideLoading();
 });
 
 //$.get('/one_one/').done(function (data) {
@@ -538,8 +728,8 @@ function get_instance_pure_increase(button) {
             toolbox: {
                 show: true,
                 feature: {
-                    dataZoom: {},
-                    dataView: {readOnly: false},
+                    //dataZoom: {},
+                    //dataView: {readOnly: false},
                     magicType: {type: ['bar', 'line']},
                     restore: {},
                     saveAsImage: {}
@@ -643,7 +833,7 @@ top_10_industry.on('click', function (params) {
         var top_10_industry_further2 = echarts.init(document.getElementById('top_10_industry_further2'));
         top_10_industry_further.showLoading();
         top_10_industry_further2.showLoading();
-        $.get('/top_10_industry_further/', {'Industry': params.name}).done(function (data) {
+        $.get('/top_10_industry_count_further/', {'Industry': params.name}).done(function (data) {
             var option = {
                 title: {
                     text: data['title'] + "行业DB类型与版本分布",
@@ -738,8 +928,8 @@ top_10_industry.on('click', function (params) {
                     {
                         name: '磁盘类型',
                         type: 'pie',
-                        radius : '55%',
-                        center: ['50%', '60%'],
+                        //radius : '55%',
+                        //center: ['50%', '60%'],
                         data: data['data5'],
                         itemStyle: {
                             emphasis: {
@@ -766,7 +956,7 @@ top_10_company.on('click', function (params) {
         var top_10_company_further2 = echarts.init(document.getElementById('top_10_company_further2'));
         top_10_company_further.showLoading();
         top_10_company_further2.showLoading();
-        $.get('/top_10_company_further/', {'CompanyName': params.name}).done(function (data) {
+        $.get('/top_10_company_count_further/', {'CompanyName': params.name}).done(function (data) {
             var option = {
                 title: {
                     text: data['title'] + "DB类型与版本分布",
@@ -861,8 +1051,8 @@ top_10_company.on('click', function (params) {
                     {
                         name: '磁盘类型',
                         type: 'pie',
-                        radius : '55%',
-                        center: ['50%', '60%'],
+                        //radius : '55%',
+                        //center: ['50%', '60%'],
                         data: data['data5'],
                         itemStyle: {
                             emphasis: {

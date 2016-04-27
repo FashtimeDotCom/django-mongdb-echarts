@@ -160,6 +160,7 @@ def outer_disk_type_backup(request):
             for v in Db.outer(DBClass=dbclass).distinct('DiskType'):
                 data['data3'].append({'value': Db.outer(DBClass=dbclass, DiskType=v).count(), 'name': v})
     return JsonResponse(data, safe=False)
+# 需求改变，so...废弃
 
 
 @csrf_exempt
@@ -208,7 +209,7 @@ def inner_dbclass(request):
 
 
 @csrf_exempt
-def top_10_industry(request):
+def top_10_industry_count(request):
     data = {
         'data': [],
         'data1': []
@@ -226,7 +227,7 @@ def top_10_industry(request):
 
 
 @csrf_exempt
-def top_10_industry_further(request):
+def top_10_industry_count_further(request):
     industry = request.GET['Industry']
     db_version_list = Db.outer(Industry=industry).distinct('DBType')
     db_class_list = Db.outer(Industry=industry).distinct('DBClass')
@@ -282,7 +283,27 @@ def top_10_industry_further(request):
 
 
 @csrf_exempt
-def top_10_company(request):
+def top_10_industry_memory_limit(request):
+    data = {
+        'category': [],
+        'data1': get_top_memory_limit_sum_of_industry(10)
+    }
+    data['category'] = [i for _, i in [j.items()[0] for j in data['data1']]]
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def top_10_industry_disk_space(request):
+    data = {
+        'category': [],
+        'data1': get_top_disk_space_sum_of_industry(10)
+    }
+    data['category'] = [i for _, i in [j.items()[0] for j in data['data1']]]
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def top_10_company_count(request):
     data = {
         'category': [],
         'data1': [],
@@ -300,7 +321,7 @@ def top_10_company(request):
 
 
 @csrf_exempt
-def top_10_company_further(request):
+def top_10_company_count_further(request):
     company = request.GET['CompanyName']
     db_version_list = Db.outer(CompanyName=company).distinct('DBType')
     db_class_list = Db.outer(CompanyName=company).distinct('DBClass')
@@ -348,6 +369,27 @@ def top_10_company_further(request):
     for disktype in data['data4']:
         data['data5'].append({'value': Db.outer(CompanyName=company, DiskType=disktype).count(), 'name': disktype})
     return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def top_10_company_memory_limit(request):
+    data = {
+        'category': [],
+        'data1': get_top_memory_limit_sum_of_company(10)
+    }
+    data['category'] = [i for _, i in [j.items()[0] for j in data['data1']]]
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def top_10_company_disk_space(request):
+    data = {
+        'category': [],
+        'data1': get_top_disk_space_sum_of_company(10)
+    }
+    data['category'] = [i for _, i in [j.items()[0] for j in data['data1']]]
+    return JsonResponse(data, safe=False)
+
 
 
 @csrf_exempt
@@ -454,7 +496,7 @@ def instance_pure_increase(request):
         current_timestamp = time.mktime(_local_now.timetuple())
         current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
         fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
-        data['xAxis'] = [u'{}周-{}'.format(week, business_week_to_date(week)) for week in fifteen_business_week]
+        data['xAxis'] = [u'{}'.format(business_week_to_date(week)) for week in fifteen_business_week]
         # 当周申请
         for week in fifteen_business_week:
             data['data1'].append(Db.outer_all(BusinessCreateWeek=week).count())
@@ -493,6 +535,5 @@ def instance_pure_increase(request):
     return JsonResponse(data, safe=False)
 
 
-# print get_duration_by_month(40)
-# print get_delta_by_month(39)
-# print get_delta_by_day(1100)
+# print get_top_memory_limit_sum(9)
+# print get_top_disk_space_sum(9)
