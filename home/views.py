@@ -367,7 +367,7 @@ def righttop(request):
 @csrf_exempt
 def fish_bone_disk_by_month(request):
     data = {
-        'title': 'disk space净新增(GB)',
+        'title': 'disk space净新增(TB)',
         'data1': [],
         'data2': [],
         'data3': [],
@@ -389,7 +389,7 @@ def fish_bone_disk_by_month(request):
 @csrf_exempt
 def fish_bone_memory_by_month(request):
     data = {
-        'title': 'memory limit净新增(TB)',
+        'title': 'memory limit净新增(GB)',
         'data1': [],
         'data2': [],
         'data3': [],

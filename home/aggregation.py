@@ -335,3 +335,42 @@ def get_delta_by_day(day=None):
     cur_delete.close()
     # 返回结果
     return create['count'] - delete['count']
+
+# 笔记区---------------
+pipeline = [
+    {
+        '$match': {
+
+        }
+    },
+    {},
+    {}
+]
+
+a = {
+    "_id" : ("5645bc057c237b3b69ec1807"),
+    "region" : "6001",
+    "set_id" : "9",
+    "uuid" : "530802b2-22a0-4726-bc4f-a77075568ece",
+    "host_id" : "172025008025",
+    "host_ip" : "172.25.8.25",
+    "create_time" : 20151012,
+    "modify_time" : 20151026,
+    "cpus" : 2,
+    "deleted" : 1,
+    "type" : 100,
+    "saveTime" : 20151113,
+    "inner_member" : 1,
+    "__v" : 0,
+    "user_email" : "uhosttest@ucloud.cn",
+    "company_id" : 23313,
+    "company_name" : "基础云计算中心",
+    "top_organization_id" : 23313,
+    "uhost_instance" : {
+        "os_name" : "CentOS 6.5 64位",
+        "disks" : 20,
+        "memory" : 2048,
+        "cpus" : 2
+    },
+    "industry_type" : "企业服务（SAAS/PAAS）"
+}
