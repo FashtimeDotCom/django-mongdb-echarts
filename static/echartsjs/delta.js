@@ -213,7 +213,7 @@ $.get('/top_10_industry/').done(function (data) {
         },
         tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
+            formatter: "{a} <br/>{b}: {c}"
         },
         legend: {
             orient: 'vertical',
@@ -256,7 +256,7 @@ $.get('/top_10_company/').done(function (data) {
         },
         tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
+            formatter: "{a} <br/>{b}: {c}"
         },
         legend: {
             orient: 'vertical',
