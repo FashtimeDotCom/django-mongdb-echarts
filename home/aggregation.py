@@ -493,6 +493,49 @@ def get_top_pure_increase_of_company(week=None, limit=None):
         result.append({'value': tmp_list[i]['count'], 'name': tmp_list[i]['_id'] + '(' + tmp_list[i]['manager'] + ')'})
     return result
 
+
+# 获得某周top limit 个公司删除的存续大于1天的实例个数的游标
+def get_top_pure_delete_of_company(week=None, limit=None):
+    pipeline = [
+        {
+            '$match': {
+                'InstanceCycle': {
+                    "$gt": 0
+                },
+                'InnerMark': 'No',
+                "BusinessDeleteWeek": week
+            }
+        },
+        {
+            '$project': {
+                "CompanyName": "$CompanyName",
+                "Manager": "$Manager",
+            }
+        },
+        {
+            '$group': {
+                '_id': "$CompanyName",
+                'manager': {'$first': "$Manager"},
+                'count': {'$sum': 1},
+            }
+        },
+        {
+            '$sort': {'count': -1}
+        },
+        {
+            '$limit': limit
+        }
+    ]
+    cur = Db._get_collection().aggregate(pipeline)
+    tmp_list = []
+    result = []
+    for _ in xrange(0, limit):
+        tmp_list.append(cur.next())
+    cur.close()
+    for i in xrange(0, limit):
+        result.append({'value': tmp_list[i]['count'], 'name': tmp_list[i]['_id'] + '(' + tmp_list[i]['manager'] + ')'})
+    return result
+
 # 笔记区---------------
 a = [
     {'$match':{"deleted":0}},

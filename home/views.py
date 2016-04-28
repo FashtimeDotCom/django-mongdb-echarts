@@ -411,13 +411,25 @@ def top_10_company_pure_increase_week(request):
     _local_now = datetime.datetime.now()
     current_timestamp = time.mktime(_local_now.timetuple())
     current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
-    print current_business_week
+    print '本周:{0}'.format(current_business_week)
     tmpbook = get_top_pure_increase_of_company(week=current_business_week, limit=10)
     data = {
         'category': [i for _, i in [j.items()[0] for j in tmpbook]],
-        'data1': [i for _, i in [j.items()[1] for j in tmpbook]]
+        'data1': tmpbook
     }
-    print data
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def top_10_company_pure_delete_week(request):
+    _local_now = datetime.datetime.now()
+    current_timestamp = time.mktime(_local_now.timetuple())
+    current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+    tmpbook = get_top_pure_delete_of_company(week=current_business_week, limit=10)
+    data = {
+        'category': [i for _, i in [j.items()[0] for j in tmpbook]],
+        'data1': tmpbook
+    }
     return JsonResponse(data, safe=False)
 
 

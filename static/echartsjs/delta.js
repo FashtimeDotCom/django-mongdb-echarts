@@ -554,70 +554,93 @@ $.get('/top_10_company_disk_space/').done(function (data) {
 
 $.get('/top_10_company_pure_increase_week/').done(function (data) {
     var option = {
-        title: {
-            text: '本周创建且未删除实例总数前十的公司'
+        title : {
+            text: '本周净创建前十的公司 (个)',
+            //subtext: '纯属虚构',
+            x:'center'
         },
-        tooltip: {},
-        legend: {
-            data:['实例个数']
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (个)"
         },
-        xAxis: {
-            data: data['category'],
-            axisLabel:{
-                //rotate:90, //刻度旋转45度角
-                textStyle:{
-                    //color:"red", //刻度颜色
-                    fontSize:5  //刻度大小
-                }
+        //legend: {
+        //    orient: 'vertical',
+        //    x: 'right',
+        //    y: 'bottom',
+        //    data: data['category'],
+        //    textStyle: {
+        //        //fontSize: 9,
+        //        //fontStyle: 'italic'
+        //    }
+        //},
+        series: [
+            {
+                name: '公司',
+                type: 'pie',
+                //selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
             }
-        },
-        //grid: { // 控制图的大小，调整下面这些值就可以，
-        //    x: 40,
-        //    x2: 100,
-        //    y2: 200,// y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
-        // },
-        yAxis: {},
-        series: [{
-            name: '实例个数',
-            type: 'bar',
-            data: data['data1']
-        }]
+        ]
     };
     top_10_company_pure_increase_week.setOption(option);
     top_10_company_pure_increase_week.hideLoading();
 });
 
-//$.get('/top_10_company_pure_delete_week/').done(function (data) {
-$.get('/top_10_company_memory_limit/').done(function (data) {
+$.get('/top_10_company_pure_delete_week/').done(function (data) {
     var option = {
-        title: {
-            text: 'ECharts 入门示例'
+        title : {
+            text: '本周删除前十的公司 (个)',
+            subtext: '只统计存续大于一天的实例',
+            x:'center'
         },
-        tooltip: {},
-        legend: {
-            data:['销量']
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} (个)"
         },
-        xAxis: {
-            data: ["衬衫","羊毛衫羊毛衫羊毛衫羊毛衫","雪纺衫雪纺衫雪纺衫","裤子","高跟鞋","袜子","羊毛衫羊毛衫羊毛衫羊毛衫","雪纺衫雪纺衫雪纺衫","裤子","高跟鞋","袜子"],
-            axisLabel:{
-                rotate:45, //刻度旋转45度角
-                textStyle:{
-                    //color:"green", //刻度颜色
-                    fontSize:3  //刻度大小
-                }
+        //legend: {
+        //    orient: 'vertical',
+        //    x: 'right',
+        //    y: 'bottom',
+        //    data: data['category'],
+        //    textStyle: {
+        //        //fontSize: 9,
+        //        //fontStyle: 'italic'
+        //    }
+        //},
+        series: [
+            {
+                name: '公司',
+                type: 'pie',
+                //selectedMode: 'single',
+                radius: ['30%', '60%'],
+
+                label: {
+                    normal: {
+                        //show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: true
+                    }
+                },
+                data: data['data1']
             }
-        },
-         grid: { // 控制图的大小，调整下面这些值就可以，
-             x: 40,
-             x2: 100,
-             y2: 150,// y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
-         },
-        yAxis: {},
-        series: [{
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20, 20, 36, 10, 10, 20]
-        }]
+        ]
     };
     top_10_company_pure_delete_week.setOption(option);
     top_10_company_pure_delete_week.hideLoading();
