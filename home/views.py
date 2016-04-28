@@ -15,6 +15,7 @@ import math
 
 global zero_time, zero_timestamp
 zero_timestamp = 1357488000
+# = 2013-01-07 00:00
 zero_time = time.localtime(zero_timestamp)
 # time.struct_time(tm_year=2013, tm_mon=1, tm_mday=1, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=1, tm_isdst=0)
 
