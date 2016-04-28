@@ -407,6 +407,20 @@ def top_10_company_disk_space(request):
 
 
 @csrf_exempt
+def top_10_company_pure_increase_week(request):
+    _local_now = datetime.datetime.now()
+    current_timestamp = time.mktime(_local_now.timetuple())
+    current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+    tmpbook = get_top_pure_increase_of_company(week=current_business_week, limit=10)
+    data = {
+        'category': [i for _, i in [j.items()[0] for j in tmpbook]],
+        'data1': [i for _, i in [j.items()[1] for j in tmpbook]]
+    }
+    print data
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
 def lefttop(request):
     # field = request.POST.get('field')
     field = "DBType"
@@ -547,7 +561,3 @@ def instance_pure_increase(request):
         pass
     # print data
     return JsonResponse(data, safe=False)
-
-
-# print get_top_memory_limit_sum(9)
-# print get_top_disk_space_sum(9)
