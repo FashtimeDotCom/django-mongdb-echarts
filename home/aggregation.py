@@ -468,7 +468,7 @@ def get_top_pure_increase_of_company(week=None, limit=None):
             '$match': {
                 'InnerMark': 'No',
                 'BusinessCreateWeek': {'$eq': week},
-                'BusinessDeleteWeek': {'$ne': None},
+                'BusinessDeleteWeek': {'$eq': None},
             },
         },
         {
