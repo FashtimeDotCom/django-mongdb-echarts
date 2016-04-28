@@ -33,7 +33,7 @@ class IndexView(TemplateView):
 def business_week_to_date(week=None):
     timestamp = (week - 1) * 86400 * 7 + zero_timestamp
     local_dt = datetime.datetime.fromtimestamp(timestamp)
-    return local_dt.date()
+    return local_dt.strftime('%m-%d')
 
 
 # 数据库转换为local时间，不需要了
@@ -406,7 +406,6 @@ def top_10_company_disk_space(request):
     return JsonResponse(data, safe=False)
 
 
-
 @csrf_exempt
 def lefttop(request):
     # field = request.POST.get('field')
@@ -531,7 +530,7 @@ def instance_pure_increase(request):
         current_timestamp = time.mktime(_local_now.timetuple())
         current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
         thirty_business_day = xrange(current_business_day - 29, current_business_day + 1)
-        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).date()) for i in range(-29, 1)]
+        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).strftime('%d')) for i in range(-29, 1)]
         # 当日申请
         for day in thirty_business_day:
             data['data1'].append(Db.outer_all(BusinessCreateDay=day).count())
