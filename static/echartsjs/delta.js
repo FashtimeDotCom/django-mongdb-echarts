@@ -3,6 +3,7 @@
  */
 var outer = echarts.init(document.getElementById('outer'));
 var outer_disk_type = echarts.init(document.getElementById('outer_disk_type'));
+var outer_group_region = echarts.init(document.getElementById('outer_group_region'));
 //var inner = echarts.init(document.getElementById('inner'));
 var top_10_industry = echarts.init(document.getElementById('top_10_industry'));
 var top_10_industry_memory_limit = echarts.init(document.getElementById('top_10_industry_memory_limit'));
@@ -18,6 +19,7 @@ var instance_pure_increase = echarts.init(document.getElementById('instance_pure
 
 outer.showLoading();
 outer_disk_type.showLoading();
+outer_group_region.showLoading();
 //inner.showLoading();
 top_10_industry.showLoading();
 top_10_industry_memory_limit.showLoading();
@@ -105,7 +107,7 @@ $.get('/outer/').done(function (data) {
 $.get('/outer_disk_type/').done(function (data) {
     var option = {
         title : {
-            text: '外部DB类型 & 磁盘类型分布',
+            text: '磁盘类型',
             //subtext: '纯属虚构',
             x:'center'
         },
@@ -123,7 +125,7 @@ $.get('/outer_disk_type/').done(function (data) {
                     {
                         name: '磁盘类型',
                         type: 'pie',
-                        radius : '65%',
+                        radius : '55%',
                         //center: ['50%', '60%'],
                         data: data['data1'],
                         itemStyle: {
@@ -138,6 +140,62 @@ $.get('/outer_disk_type/').done(function (data) {
     };
     outer_disk_type.setOption(option);
     outer_disk_type.hideLoading();
+});
+
+$.get('/outer_group_region/').done(function (data) {
+    var option = {
+        title : {
+            text: '可用区 & 机房',
+            //subtext: '纯属虚构',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            y: 'bottom',
+            data: data['data']
+        },
+        series: [
+            {
+                name: '可用区',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: [0, '40%'],
+
+                label: {
+                    normal: {
+                        show: false,
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: data['data1']
+            },
+            {
+                name: '机房',
+                type: 'pie',
+                radius: ['45%', '60%'],
+
+                //label: {
+                //    normal: {
+                //        position: 'inner'
+                //    }
+                //},
+
+                data: data['data2']
+            }
+        ]
+    };
+    outer_group_region.setOption(option);
+    outer_group_region.hideLoading();
 });
 
 //
@@ -239,13 +297,13 @@ $.get('/top_10_industry_count/').done(function (data) {
 
                 label: {
                     normal: {
-                        show: false,
+                        //show: false,
                         //position: 'inner'
                     }
                 },
                 labelLine: {
                     normal: {
-                        show: false
+                        show: true
                     }
                 },
                 data: data['data1']
@@ -373,13 +431,13 @@ $.get('/top_10_company_count/').done(function (data) {
 
                 label: {
                     normal: {
-                        show: false,
+                        //show: false,
                         //position: 'inner'
                     }
                 },
                 labelLine: {
                     normal: {
-                        show: false
+                        show: true
                     }
                 },
                 data: data['data1']

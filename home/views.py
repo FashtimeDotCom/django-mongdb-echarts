@@ -25,7 +25,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['asd'] = "123"
+        context['auther'] = "kevin.gao@ucloud.cn"
         context['current_page'] = "home"
         return context
 
@@ -117,6 +117,20 @@ def outer_disk_type(request):
     }
     for disktype in data['data']:
         data['data1'].append({'value': Db.outer(DiskType=disktype).count(), 'name': disktype})
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def outer_group_region(request):
+    data = {
+        'data': Db.outer.order_by('DBClass').distinct('AzGroup'),
+        'data1': [],
+        'data2': [],
+    }
+    for azgroup in data['data']:
+        data['data1'].append({'value': Db.outer(AzGroup=azgroup).count(), 'name': azgroup})
+        for region in Db.outer(AzGroup=azgroup).order_by('DBClass').distinct('Region'):
+            data['data2'].append({'value': Db.outer(AzGroup=azgroup, Region=region).count(), 'name': region})
     return JsonResponse(data, safe=False)
 
 

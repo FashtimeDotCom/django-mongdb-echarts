@@ -15,6 +15,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^outer/', outer_dbclass, name="outer"),
     url(r'^outer_disk_type/', outer_disk_type, name="outer_disk_type"),
+    url(r'^outer_group_region/', outer_group_region, name="outer_group_region"),
     url(r'^inner/', inner_dbclass, name="inner"),
     url(r'^top_10_industry_count/', top_10_industry_count, name="top_10_industry_count"),
     url(r'^top_10_industry_count_further/', top_10_industry_count_further, name="top_10_industry_count_further"),
