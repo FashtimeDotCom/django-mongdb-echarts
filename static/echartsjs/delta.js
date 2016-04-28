@@ -727,9 +727,9 @@ function get_instance_pure_increase(button) {
             legend: {
                 data:data['legend'],
                 selectedMode: 'single',
-                selected: {
-                    '净增': true
-                }
+                //selected: {
+                //    '净增': true
+                //}
             },
             toolbox: {
                 show: true,
