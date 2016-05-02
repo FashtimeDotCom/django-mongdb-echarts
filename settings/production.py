@@ -13,3 +13,11 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += [
     'home',
 ]
+
+
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
+DATABASES = {
+    'default': {}
+}

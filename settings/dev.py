@@ -18,7 +18,7 @@ INSTALLED_APPS += [
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-print BASE_DIR
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
