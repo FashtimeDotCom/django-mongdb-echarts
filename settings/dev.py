@@ -13,6 +13,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS += [
     'debug_toolbar',
     'home',
+    'salt_demo',
 ]
 
 
