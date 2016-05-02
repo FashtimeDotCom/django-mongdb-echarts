@@ -1,3 +1,4 @@
+# coding:utf8
 """
 Django settings for udbshow project.
 
@@ -13,6 +14,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import mongoengine
 from .password_settings import _MONGODB_USER, _MONGODB_PASSWD
+__author__ = 'kevin'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,9 +27,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '@k-eu80u22(=%topsx=r(7#4#!*o=^hl0v%gzu^23#adcill(v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -78,11 +76,6 @@ WSGI_APPLICATION = 'udbshow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': '',
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -143,6 +136,6 @@ _MONGODB_NAME = 'udb'
 _MONGODB_DATABASE_HOST = 'mongodb://%s:%s@%s/%s' \
     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
 
-print _MONGODB_DATABASE_HOST
+# print _MONGODB_DATABASE_HOST
 mongoengine.connect(host=_MONGODB_DATABASE_HOST)
 # mongoengine.connect(host=_MONGODB_DATABASE_HOST, username=_MONGODB_USER, password=_MONGODB_PASSWD)
