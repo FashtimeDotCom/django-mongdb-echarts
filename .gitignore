@@ -4,3 +4,4 @@ front-end
 db.sqlite3
 password_settings.py
 uwsgi.ini
+production_static
