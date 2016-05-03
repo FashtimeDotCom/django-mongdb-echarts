@@ -11,5 +11,5 @@ urlpatterns = [
 
 # AJAX
 urlpatterns += [
-    # url(r'^outer/', outer_dbclass, name="outer"),
+    url(r'^cmd_run/', cmd_run, name="cmd_run"),
 ]

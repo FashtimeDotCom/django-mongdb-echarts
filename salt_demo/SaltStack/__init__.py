@@ -3,11 +3,12 @@ import requests
 __author__ = 'kevin.gao'
 
 """
-import request
+import requests
 requests.packages.urllib3.disable_warnings()
 -----
 Use this above to ignore the `InsecureRequestWarning`
 """
+requests.packages.urllib3.disable_warnings()
 
 
 class SaltStack(object):
@@ -50,8 +51,8 @@ class SaltStack(object):
             raise Exception('Error from source %s' % r.text)
  
     def manage_status(self):
-        r = requests.post(self.host, cookies=self.cookies, data={'client': 'runner',
-                                                                 'fun': 'manage.status'})
+        r = requests.post(self.host, verify=False, cookies=self.cookies, data={'client': 'runner',
+                                                                               'fun': 'manage.status'})
         if r.status_code == 200:
             return r.json()
         else:
@@ -161,7 +162,9 @@ def demo():
                      secure=SECURE)
     print sapi.host
     print sapi.cookies
-    print sapi.manage_status()
+    # print sapi.manage_status()
+    print sapi.cmd_run('*', "cat /var/log/messages|grep -i 'out of memory'")
+    print sapi.cmd_run('*', "tail -n 5 /opt/udb/instance/mysql-5.6/udb-sf1zzm/log/mysqld.log")
 
 
 if __name__ == "__main__":

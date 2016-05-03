@@ -1,15 +1,31 @@
 {% load staticfiles %}
-<nav class="uk-navbar uk-margin-bottom" data-uk-sticky="{top:-400}">
+<nav class="uk-navbar uk-margin-bottom" data-uk-sticky="{top:-200}">
     <a href="/" class="uk-navbar-brand uk-hidden-small">
         <img style="height: 30px" alt="UDB运营平台" title="UDB运营平台" src="{% static "img/Database.png" %}" class="uk-margin uk-margin-remove">
     </a>
     <ul class="uk-navbar-nav">
-        <li class=""><a href="#instance_pure_increase" data-uk-smooth-scroll>实例净增图</a></li>
-        <li class=""><a href="#outer" data-uk-smooth-scroll>类型与版本分布图</a></li>
-        <li class=""><a href="#fish_bone_memory" data-uk-smooth-scroll>memory-limit月净新增</a></li>
-        <li class=""><a href="#fish_bone_disk" data-uk-smooth-scroll>disk-space月净新增</a></li>
-        <li class=""><a href="#top_10_industry" data-uk-smooth-scroll>实例数量行业前十</a></li>
-        <li class=""><a href="#top_10_company" data-uk-smooth-scroll>实例数量公司前十</a></li>
-        <li class="uk-parent"><a href="#"></a></li>
+{#        <li class="uk-parent {% if current_page == 'home' %}uk-active{% endif %}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false">#}
+{#            <a class="uk-active" href="{% url "home:echarts" %}">BI-UDB</a>#}
+{#            <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">#}
+{#                <ul class="uk-nav uk-nav-navbar">#}
+    {% if current_page == 'salt_demo' %}
+                    <li class=""><a href="{% url "home:echarts" %}"><i class="uk-icon-chevron-left"></i> 返回</a></li>
+    {% else %}
+                    <li class=""><a href="#instance_pure_increase" data-uk-smooth-scroll>实例净增图</a></li>
+                    <li class=""><a href="#outer" data-uk-smooth-scroll>类型与版本分布图</a></li>
+                    <li class=""><a href="#fish_bone_memory" data-uk-smooth-scroll>memory-limit月净新增</a></li>
+                    <li class=""><a href="#fish_bone_disk" data-uk-smooth-scroll>disk-space月净新增</a></li>
+                    <li class=""><a href="#top_10_industry" data-uk-smooth-scroll>实例数量行业前十</a></li>
+                    <li class=""><a href="#top_10_company" data-uk-smooth-scroll>实例数量公司前十</a></li>
+                    <li class=""><a href="#top_10_company_pure_increase_week" data-uk-smooth-scroll>本周净创建公司前十</a></li>
+                    <li class=""><a href="#top_10_company_pure_delete_week" data-uk-smooth-scroll>本周删除（存续>1天）公司前十</a></li>
+    {% endif %}
+{#                </ul>#}
+{#            </div>#}
+{#        </li>#}
+
+        <li class="uk-parent {% if current_page == 'salt_demo' %}uk-active{% endif %}" data-uk-dropdown="" aria-haspopup="true" aria-expanded="false">
+            <a href="{% url "salt:index" %}">SALT</a>
+        </li>
     </ul>
 </nav>

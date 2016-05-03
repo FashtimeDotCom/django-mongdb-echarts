@@ -19,7 +19,7 @@ from django.contrib.auth.views import login
 
 urlpatterns = [
     url(r'^adm1n/', admin.site.urls),
-    url(r'^', include("home.urls", namespace="cmdbdemo")),
+    url(r'^', include("home.urls", namespace="home")),
     url(r'^salt/', include("salt_demo.urls", namespace="salt")),
     url(r'^accounts/login/', login, {'template_name': 'login.html'}, name='login'),
 ]
