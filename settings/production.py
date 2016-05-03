@@ -21,3 +21,6 @@ INSTALLED_APPS += [
 DATABASES = {
     'default': {}
 }
+
+# python manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'production_static')
