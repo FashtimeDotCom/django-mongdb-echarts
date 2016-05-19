@@ -555,7 +555,7 @@ $.get('/top_10_company_disk_space/').done(function (data) {
 $.get('/top_10_company_pure_increase_week/').done(function (data) {
     var option = {
         title : {
-            text: '本周净创建前十的公司 (个)',
+            text: '上周净创建前十的公司 (个)',
             //subtext: '纯属虚构',
             x:'center'
         },
@@ -602,7 +602,7 @@ $.get('/top_10_company_pure_increase_week/').done(function (data) {
 $.get('/top_10_company_pure_delete_week/').done(function (data) {
     var option = {
         title : {
-            text: '本周删除前十的公司 (个)',
+            text: '上周删除前十的公司 (个)',
             subtext: '只统计存续大于一天的实例',
             x:'center'
         },
