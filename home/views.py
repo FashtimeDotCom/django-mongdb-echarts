@@ -574,3 +574,6 @@ def instance_pure_increase(request):
         pass
     # print data
     return JsonResponse(data, safe=False)
+
+# 二期需求开始
+

@@ -18,6 +18,7 @@ var top_10_company_pure_delete_week = echarts.init(document.getElementById('top_
 var fish_bone_disk = echarts.init(document.getElementById('fish_bone_disk'));
 var fish_bone_memory = echarts.init(document.getElementById('fish_bone_memory'));
 var instance_pure_increase = echarts.init(document.getElementById('instance_pure_increase'));
+// 二期需求开始
 
 outer.showLoading();
 outer_disk_type.showLoading();
@@ -36,6 +37,7 @@ top_10_company_pure_delete_week.showLoading();
 fish_bone_disk.showLoading();
 fish_bone_memory.showLoading();
 instance_pure_increase.showLoading();
+// 二期需求开始
 
 $.get('/outer/').done(function (data) {
     var option = {
@@ -1231,3 +1233,4 @@ top_10_company.on('click', function (params) {
         });
     }
 });
+// 二期需求开始
