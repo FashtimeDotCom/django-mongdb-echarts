@@ -17,7 +17,7 @@ STATIC_URL = '/static/'
 # Application definition
 
 INSTALLED_APPS += [
-    'debug_toolbar',
+    # 'debug_toolbar',
     'home',
     'salt_demo',
 ]
