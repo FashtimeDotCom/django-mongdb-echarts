@@ -35,4 +35,6 @@ urlpatterns += [
 
     # 二期需求
     url(r'^instance_pure_increase_by_company/', instance_pure_increase_by_company, name="instance_pure_increase_by_company"),
+    url(r'^fish_bone_disk_company/', fish_bone_disk_by_month_company, name="fish_bone_disk_company"),
+    url(r'^fish_bone_memory_company/', fish_bone_memory_by_month_company, name="fish_bone_memory_company"),
 ]

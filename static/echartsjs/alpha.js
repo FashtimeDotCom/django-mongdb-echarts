@@ -341,7 +341,7 @@ $.get('/top_10_industry_memory_limit/').done(function (data) {
             {
                 name: '行业',
                 type: 'pie',
-                selectedMode: 'single',
+                //selectedMode: 'single',
                 radius: ['30%', '60%'],
 
                 label: {
@@ -384,7 +384,7 @@ $.get('/top_10_industry_disk_space/').done(function (data) {
             {
                 name: '行业',
                 type: 'pie',
-                selectedMode: 'single',
+                //selectedMode: 'single',
                 radius: ['30%', '60%'],
 
                 label: {
@@ -485,7 +485,7 @@ $.get('/top_10_company_memory_limit/').done(function (data) {
             {
                 name: '公司',
                 type: 'pie',
-                selectedMode: 'single',
+                //selectedMode: 'single',
                 radius: ['30%', '60%'],
 
                 label: {
@@ -532,7 +532,7 @@ $.get('/top_10_company_disk_space/').done(function (data) {
             {
                 name: '公司',
                 type: 'pie',
-                selectedMode: 'single',
+                //selectedMode: 'single',
                 radius: ['30%', '60%'],
 
                 label: {

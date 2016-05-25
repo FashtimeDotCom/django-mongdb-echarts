@@ -143,14 +143,169 @@ top_10_company.on('click', function (params) {
         // new
         var top_10_company_further = echarts.init(document.getElementById('top_10_company_further'));
         var top_10_company_further2 = echarts.init(document.getElementById('top_10_company_further2'));
+        var fish_bone_memory_company = echarts.init(document.getElementById('fish_bone_memory_company'));
+        var fish_bone_disk_company = echarts.init(document.getElementById('fish_bone_disk_company'));
 
         // loading
         top_10_company_further.showLoading();
         top_10_company_further2.showLoading();
+        fish_bone_memory_company.showLoading();
+        fish_bone_disk_company.showLoading();
 
         // run
         // 需要把定义好的echarts传进去
         get_instance_pure_increase_company({name: 'month', company_name: params.name });
+
+        $.get('/fish_bone_memory_company/', {CompanyName: params.name}).done(function (data) {
+            var option = {
+                title : {
+                    text: data['title'],
+                    subtext: '数据为最近6个月',
+                    x:'left'
+                },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data:['净增', '创建', '删除']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'category',
+                        axisTick : {show: false},
+                        data : data['y']
+                    }
+                ],
+                series : [
+                    {
+                        name:'净增',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'left'
+                            }
+                        },
+                        data:data['data3']
+                    },
+                    {
+                        name:'创建',
+                        type:'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true
+                            }
+                        },
+                        data:data['data1']
+                    },
+                    {
+                        name:'删除',
+                        type:'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'left'
+                            }
+                        },
+                        data:data['data2']
+                    }
+                ]
+            };
+
+            fish_bone_memory_company.hideLoading();
+            fish_bone_memory_company.setOption(option);
+        });
+        $.get('/fish_bone_disk_company/', {CompanyName: params.name}).done(function (data) {
+            var option = {
+                title : {
+                    text: data['title'],
+                    subtext: '数据为最近6个月',
+                    x:'left'
+                },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data:['净增', '创建', '删除']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'category',
+                        axisTick : {show: false},
+                        data : data['y']
+                    }
+                ],
+                series : [
+                    {
+                        name:'净增',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'left'
+                            }
+                        },
+                        data:data['data3']
+                    },
+                    {
+                        name:'创建',
+                        type:'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true
+                            }
+                        },
+                        data:data['data1']
+                    },
+                    {
+                        name:'删除',
+                        type:'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'left'
+                            }
+                        },
+                        data:data['data2']
+                    }
+                ]
+            };
+
+            fish_bone_disk_company.hideLoading();
+            fish_bone_disk_company.setOption(option);
+        });
         $.get('/top_10_company_count_further/', {CompanyName: params.name}).done(function (data) {
             var option = {
                 title: {
@@ -275,7 +430,8 @@ function middle_fuc(button) {
     console.log(middle_json);
     get_instance_pure_increase_company(middle_json)
 }
-//
+
+// 目标方法
 function get_instance_pure_increase_company(json_data) {
     console.log(json_data);
     var instance_pure_increase_company = echarts.init(document.getElementById('instance_pure_increase_company'));

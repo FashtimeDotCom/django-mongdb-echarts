@@ -457,7 +457,7 @@ def righttop(request):
 @csrf_exempt
 def fish_bone_disk_by_month(request):
     data = {
-        'title': 'disk space净新增(TB)',
+        'title': 'Disk净新增(TB)',
         'data1': [],
         'data2': [],
         'data3': [],
@@ -479,7 +479,7 @@ def fish_bone_disk_by_month(request):
 @csrf_exempt
 def fish_bone_memory_by_month(request):
     data = {
-        'title': 'memory limit净新增(GB)',
+        'title': 'Memory净新增(GB)',
         'data1': [],
         'data2': [],
         'data3': [],
@@ -660,3 +660,50 @@ def instance_pure_increase_by_company(request):
         pass
     # print data
     return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def fish_bone_disk_by_month_company(request):
+    company_name = request.GET['CompanyName']
+    data = {
+        'title': 'Disk净新增(TB)',
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
+    _local_now = datetime.datetime.now()
+    current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+    twelve_business_month = xrange(current_business_month-5, current_business_month+1)
+    data['y'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+    # seven_month_list = [month for month in range(_local_now.month - 11, _local_now.month+1) if month > 0]
+    # data['y'] = ["{}月".format(_i) for _i in seven_month_list]
+    for month in twelve_business_month:
+        data['data1'].append(int(round(Db.outer_all(BusinessCreateMonth=month, CompanyName=company_name).sum('DiskSpace') / 1024)))
+        data['data2'].append(int(round(0 - Db.outer_all_deleted(BusinessDeleteMonth=month, CompanyName=company_name).sum('DiskSpace') / 1024)))
+    for _i in xrange(0, len(twelve_business_month)):
+        data['data3'].append(data['data1'][_i] + data['data2'][_i])
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def fish_bone_memory_by_month_company(request):
+    company_name = request.GET['CompanyName']
+    data = {
+        'title': 'Memory净新增(GB)',
+        'data1': [],
+        'data2': [],
+        'data3': [],
+    }
+    _local_now = datetime.datetime.now()
+    current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+    twelve_business_month = xrange(current_business_month-5, current_business_month+1)
+    data['y'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+    for month in twelve_business_month:
+        # 当月创建
+        data['data1'].append(int(round(Db.outer_all(BusinessCreateMonth=month, CompanyName=company_name).sum('MemoryLimit') / 1024)))
+        # 当月删除
+        data['data2'].append(int(round(0 - Db.outer_all_deleted(BusinessDeleteMonth=month, CompanyName=company_name).sum('MemoryLimit') / 1024)))
+    for _i in xrange(0, len(twelve_business_month)):
+        data['data3'].append(data['data1'][_i] + data['data2'][_i])
+    return JsonResponse(data, safe=False)
+

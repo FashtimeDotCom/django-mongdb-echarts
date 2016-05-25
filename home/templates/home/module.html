@@ -21,7 +21,7 @@
 <div id="modal-1" class="uk-modal">
     <div class="uk-modal-dialog uk-modal-dialog-large">
         <button type="button" class="uk-modal-close uk-close"></button>
-        <h3><i class="uk-icon-line-chart uk-text-danger uk-margin-right"></i>删除、增加、净增、存量</h3>
+        <h3><i class="uk-icon-line-chart uk-text-danger uk-margin-right"></i>实例数量 删除/增加/净增/存量 趋势图</h3>
         <div class="uk-grid">
                 <div class="uk-width-medium-1-1">
 
@@ -39,16 +39,27 @@
                 </div>
         </div>
         <br>
-        <h3><i class="uk-icon-pie-chart uk-text-danger uk-margin-right"></i>磁盘类型分布、DB类型与版本分布</h3>
+        <h3><i class="uk-icon-bar-chart uk-text-danger uk-margin-right"></i>磁盘空间/内存资源 净新增鱼骨图</h3>
 
-                <div class="uk-grid">
-                    <div class="uk-width-medium-1-2">
-                        <div id="top_10_company_further2" style="height:400px;"></div>
-                    </div>
-                    <div class="uk-width-medium-1-2">
-                        <div id="top_10_company_further" style="height:400px;"></div>
-                    </div>
-                </div>
-
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-2">
+                <div id="fish_bone_memory_company" style="height:800px;"></div>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <div id="fish_bone_disk_company" style="height:800px;"></div>
+            </div>
         </div>
+        <br>
+        <h3><i class="uk-icon-pie-chart uk-text-danger uk-margin-right"></i>磁盘类型分布/DB类型与版本分布</h3>
+
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-2">
+                <div id="top_10_company_further2" style="height:400px;"></div>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <div id="top_10_company_further" style="height:400px;"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
