@@ -11,6 +11,7 @@ import pytz
 import datetime
 from operator import itemgetter
 from aggregation import *
+from aggregation_company import *
 import math
 
 global zero_time, zero_timestamp
@@ -577,3 +578,85 @@ def instance_pure_increase(request):
 
 # 二期需求开始
 
+
+@csrf_exempt
+def instance_pure_increase_by_company(request):
+    time_grading = request.GET['time_grading']
+    company_name = request.GET['company_name']
+    data = {
+        'title': "",
+        # 分别是data1、2、3、4
+        'legend': ['申请', '删除', '净增', '存量'],
+        'xAxis': [],
+        'data1': [],
+        'data2': [],
+        'data3': [],
+        'data4': [],
+    }
+    # 月粒度
+    if time_grading == 'month':
+        # data['title'] = "实例数量申请/删除/净增/存量"
+        data['title'] = company_name
+        _local_now = datetime.datetime.now()
+        current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+        twelve_business_month = xrange(current_business_month-11, current_business_month+1)
+        data['xAxis'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+        # 当月申请
+        for month in twelve_business_month:
+            data['data1'].append(Db.outer_all(BusinessCreateMonth=month, CompanyName=company_name).count())
+        # 当月删除
+        for month in twelve_business_month:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteMonth=month, CompanyName=company_name).count())
+        # 净申请
+        for _i in xrange(0, len(twelve_business_month)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+
+        # 存量
+        for month in twelve_business_month:
+            data['data4'].append(get_duration_by_month_and_company(month, company_name))
+    # 周粒度
+    elif time_grading == 'week':
+        # data['title'] = "最近15周实例净增"
+        data['title'] = company_name
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+        fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
+        data['xAxis'] = [u'{}'.format(business_week_to_date(week)) for week in fifteen_business_week]
+        # 当周申请
+        for week in fifteen_business_week:
+            data['data1'].append(Db.outer_all(BusinessCreateWeek=week, CompanyName=company_name).count())
+        # 当周删除
+        for week in fifteen_business_week:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteWeek=week, CompanyName=company_name).count())
+        # 净申请
+        for _i in xrange(0, len(fifteen_business_week)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+        # 存量
+        for week in fifteen_business_week:
+            data['data4'].append(get_duration_by_week_and_company(week, company_name))
+    # 天粒度
+    elif time_grading == 'day':
+        # data['title'] = "最近30天实例净增"
+        data['title'] = company_name
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
+        thirty_business_day = xrange(current_business_day - 29, current_business_day + 1)
+        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).strftime('%d')) for i in range(-29, 1)]
+        # 当日申请
+        for day in thirty_business_day:
+            data['data1'].append(Db.outer_all(BusinessCreateDay=day, CompanyName=company_name).count())
+        # 当日删除
+        for day in thirty_business_day:
+            data['data2'].append(Db.outer_all_deleted(BusinessDeleteDay=day, CompanyName=company_name).count())
+        # 净申请
+        for _i in xrange(0, len(thirty_business_day)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+        # 存量
+        for day in thirty_business_day:
+            data['data4'].append(get_duration_by_day_and_company(day, company_name))
+    else:
+        pass
+    # print data
+    return JsonResponse(data, safe=False)

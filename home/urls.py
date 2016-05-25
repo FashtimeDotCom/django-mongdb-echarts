@@ -32,4 +32,7 @@ urlpatterns += [
     url(r'^fish_bone_disk/', fish_bone_disk_by_month, name="fish_bone_disk"),
     url(r'^fish_bone_memory/', fish_bone_memory_by_month, name="fish_bone_memory"),
     url(r'^instance_pure_increase/', instance_pure_increase, name="instance_pure_increase"),
+
+    # 二期需求
+    url(r'^instance_pure_increase_by_company/', instance_pure_increase_by_company, name="instance_pure_increase_by_company"),
 ]

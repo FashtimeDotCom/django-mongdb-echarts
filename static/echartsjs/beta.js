@@ -137,7 +137,9 @@ top_10_company.on('click', function (params) {
     console.log(params);
     if (params.data.selected) {
         modal_company.show();
-
+        // 记录公司名字到button里面备用
+        var company_name = $(".modal-time").attr('company', params.name);
+        console.log(company_name);
         // new
         var top_10_company_further = echarts.init(document.getElementById('top_10_company_further'));
         var top_10_company_further2 = echarts.init(document.getElementById('top_10_company_further2'));
@@ -148,8 +150,8 @@ top_10_company.on('click', function (params) {
 
         // run
         // 需要把定义好的echarts传进去
-        get_instance_pure_increase_company({'name': 'month'}, instance_pure_increase_company);
-        $.get('/top_10_company_count_further/', {'CompanyName': params.name}).done(function (data) {
+        get_instance_pure_increase_company({name: 'month', company_name: params.name });
+        $.get('/top_10_company_count_further/', {CompanyName: params.name}).done(function (data) {
             var option = {
                 title: {
                     text: data['title'] + "DB类型与版本分布",
@@ -263,13 +265,22 @@ top_10_company.on('click', function (params) {
     }
 });
 
-
-//
-function get_instance_pure_increase_company(button) {
+// 中间方法
+function middle_fuc(button) {
     console.log(button);
+    var middle_json = {
+        name: button.name,
+        company_name: $(button).attr('company')
+    };
+    console.log(middle_json);
+    get_instance_pure_increase_company(middle_json)
+}
+//
+function get_instance_pure_increase_company(json_data) {
+    console.log(json_data);
     var instance_pure_increase_company = echarts.init(document.getElementById('instance_pure_increase_company'));
     instance_pure_increase_company.showLoading();
-    $.get('/instance_pure_increase/', {'time_grading': button.name}).done(function (data) {
+    $.get('/instance_pure_increase_by_company/', {'time_grading': json_data.name, 'company_name': json_data.company_name}).done(function (data) {
         var option = {
             title: {
                 text: data['title'],
