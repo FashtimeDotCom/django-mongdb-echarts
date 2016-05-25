@@ -4,8 +4,8 @@
 
 // 绑定一个点击事件,生成新的图表
 
-var modal_company = UIkit.modal("#modal-1");
-var modal_industry = UIkit.modal("#modal-2");
+var modal_company = UIkit.modal("#modal-1",{bgclose:false});
+var modal_industry = UIkit.modal("#modal-2",{bgclose:false});
 
 // 行业前十模态
 top_10_industry.on('click', function (params) {
