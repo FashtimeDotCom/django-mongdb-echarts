@@ -25,7 +25,8 @@ urlpatterns += [
     url(r'^top_10_company_count_further/', top_10_company_count_further, name="top_10_company_count_further"),
     url(r'^top_10_company_memory_limit/', top_10_company_memory_limit, name="top_10_company_memory_limit"),
     url(r'^top_10_company_disk_space/', top_10_company_disk_space, name="top_10_company_disk_space"),
-    url(r'^top_10_company_pure_increase_week/', top_10_company_pure_increase_week, name="top_10_company_pure_increase_week"),
+    url(r'^top_10_company_pure_increase_week/', top_10_company_pure_increase_week,
+        name="top_10_company_pure_increase_week"),
     url(r'^top_10_company_pure_delete_week/', top_10_company_pure_delete_week, name="top_10_company_pure_delete_week"),
     # url(r'^one_one/', lefttop, name="lefttop"),
     # url(r'^one_two/', righttop, name="righttop"),
@@ -34,7 +35,9 @@ urlpatterns += [
     url(r'^instance_pure_increase/', instance_pure_increase, name="instance_pure_increase"),
 
     # 二期需求
-    url(r'^instance_pure_increase_by_company/', instance_pure_increase_by_company, name="instance_pure_increase_by_company"),
+    url(r'^instance_pure_increase_by_company/', instance_pure_increase_by_company,
+        name="instance_pure_increase_by_company"),
     url(r'^fish_bone_disk_company/', fish_bone_disk_by_month_company, name="fish_bone_disk_company"),
     url(r'^fish_bone_memory_company/', fish_bone_memory_by_month_company, name="fish_bone_memory_company"),
+    url(r'^instance_pure_increase_ha/', instance_pure_increase_ha, name="instance_pure_increase_ha"),
 ]

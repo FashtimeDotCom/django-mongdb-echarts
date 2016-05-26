@@ -8,29 +8,58 @@
 
 {% block content %}
 {#<div class="tm-middle">#}
+
+        <!-- 包含内容项目的容器 -->
+
         <!-- 实例净新增 -->
         <div class="uk-grid uk-margin-top">
-            <div class="uk-width-medium-1-1 uk-text-center">
+            <div class="uk-width-medium-1-1">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
-                    <div class="uk-grid">
-                        <div class="uk-width-medium-1-1">
+                    <ul id="my-id" class="uk-switcher uk-margin">
+                        <li class="uk-active">
+                            <div class="uk-grid">
+                                <div class="uk-width-medium-1-1">
+                                    <div class="uk-margin">
+                                      时间粒度：
+                                      <div class="uk-button-group" data-uk-button-radio>
+                                        <button name="month" class="uk-button uk-button-primary uk-active" onclick="get_instance_pure_increase(this)">月</button>
+                                        <button name="week" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">周</button>
+                                        <button name="day" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">日</button>
+                                      </div>
+                                    </div>
 
-                            <div class="uk-margin">
-                              时间粒度：
-                              <div class="uk-button-group" data-uk-button-radio>
-                                <button name="month" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">月</button>
-                                <button name="week" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">周</button>
-                                <button name="day" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">日</button>
-                              </div>
+                                    <div id="instance_pure_increase" style="height:600px;">
+                                    </div>
+                                </div>
                             </div>
+                        </li>
+                        <li>
+                            <div class="uk-grid">
+                                <div class="uk-width-medium-1-1">
+                                    <div class="uk-margin">
+                                      时间粒度：
+                                      <div class="uk-button-group" data-uk-button-radio>
+                                        <button name="month" class="uk-button uk-button-danger uk-active" onclick="get_instance_pure_increase_ha(this)">月</button>
+                                        <button name="week" class="uk-button uk-button-danger" onclick="get_instance_pure_increase_ha(this)">周</button>
+                                        <button name="day" class="uk-button uk-button-danger" onclick="get_instance_pure_increase_ha(this)">日</button>
+                                      </div>
+                                    </div>
 
-                            <div id="instance_pure_increase" style="height:600px;">
+                                    <div id="instance_pure_increase_ha" style="height:600px;">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </li>
+                    </ul>
+                    <!-- 包含拨动按钮的按钮租 -->
+                    <div class="uk-button-group uk-float-right" data-uk-switcher="{connect:'#my-id'}">
+                        <button class="uk-button" type="button">所有实例</button>
+                        <button class="uk-button" type="button">高可用实例</button>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- 外部实例版本分布 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">

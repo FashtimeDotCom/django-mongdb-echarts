@@ -12,7 +12,9 @@ import datetime
 from operator import itemgetter
 from aggregation import *
 from aggregation_company import *
+from aggregation_ha import *
 import math
+from home.models import Db_HA
 
 global zero_time, zero_timestamp
 zero_timestamp = 1357488000
@@ -513,7 +515,7 @@ def instance_pure_increase(request):
     }
     # 月粒度
     if time_grading == 'month':
-        data['title'] = "实例数量申请/删除/净增/存量"
+        data['title'] = "所有实例 数量申请/删除/净增/存量（月）"
         _local_now = datetime.datetime.now()
         current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
         twelve_business_month = xrange(current_business_month-11, current_business_month+1)
@@ -533,7 +535,7 @@ def instance_pure_increase(request):
             data['data4'].append(get_duration_by_month(month))
     # 周粒度
     elif time_grading == 'week':
-        data['title'] = "最近15周实例净增"
+        data['title'] = "所有实例 数量申请/删除/净增/存量（周）"
         _local_now = datetime.datetime.now()
         current_timestamp = time.mktime(_local_now.timetuple())
         current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
@@ -553,7 +555,7 @@ def instance_pure_increase(request):
             data['data4'].append(get_duration_by_week(week))
     # 天粒度
     elif time_grading == 'day':
-        data['title'] = "最近30天实例净增"
+        data['title'] = "所有实例 数量申请/删除/净增/存量（日）"
         _local_now = datetime.datetime.now()
         current_timestamp = time.mktime(_local_now.timetuple())
         current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
@@ -705,5 +707,85 @@ def fish_bone_memory_by_month_company(request):
         data['data2'].append(int(round(0 - Db.outer_all_deleted(BusinessDeleteMonth=month, CompanyName=company_name).sum('MemoryLimit') / 1024)))
     for _i in xrange(0, len(twelve_business_month)):
         data['data3'].append(data['data1'][_i] + data['data2'][_i])
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+def instance_pure_increase_ha(request):
+    time_grading = request.GET['time_grading']
+    data = {
+        'title': "",
+        # 分别是data1、2、3、4
+        'legend': ['申请', '删除', '净增', '存量'],
+        'xAxis': [],
+        'data1': [],
+        'data2': [],
+        'data3': [],
+        'data4': [],
+    }
+    # 月粒度
+    if time_grading == 'month':
+        data['title'] = "高可用实例 数量申请/删除/净增/存量（月）"
+        _local_now = datetime.datetime.now()
+        current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+        twelve_business_month = xrange(current_business_month-11, current_business_month+1)
+        data['xAxis'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+        # 当月申请
+        for month in twelve_business_month:
+            # , InstanceMode='HA'
+            data['data1'].append(Db_HA.outer_all(BusinessCreateMonth=month).count())
+        # 当月删除
+        for month in twelve_business_month:
+            data['data2'].append(Db_HA.outer_all_deleted(BusinessDeleteMonth=month).count())
+        # 净申请
+        for _i in xrange(0, len(twelve_business_month)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+
+        # 存量
+        print twelve_business_month
+        for month in twelve_business_month:
+            data['data4'].append(get_duration_by_month_and_ha(month))
+    # 周粒度
+    elif time_grading == 'week':
+        data['title'] = "高可用实例 数量申请/删除/净增/存量（周）"
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+        fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
+        data['xAxis'] = [u'{}'.format(business_week_to_date(week)) for week in fifteen_business_week]
+        # 当周申请
+        for week in fifteen_business_week:
+            data['data1'].append(Db_HA.outer_all(BusinessCreateWeek=week).count())
+        # 当周删除
+        for week in fifteen_business_week:
+            data['data2'].append(Db_HA.outer_all_deleted(BusinessDeleteWeek=week).count())
+        # 净申请
+        for _i in xrange(0, len(fifteen_business_week)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+        # 存量
+        for week in fifteen_business_week:
+            data['data4'].append(get_duration_by_week_and_ha(week))
+    # 天粒度
+    elif time_grading == 'day':
+        data['title'] = "高可用实例 数量申请/删除/净增/存量（日）"
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
+        thirty_business_day = xrange(current_business_day - 29, current_business_day + 1)
+        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).strftime('%d')) for i in range(-29, 1)]
+        # 当日申请
+        for day in thirty_business_day:
+            data['data1'].append(Db_HA.outer_all(BusinessCreateDay=day).count())
+        # 当日删除
+        for day in thirty_business_day:
+            data['data2'].append(Db_HA.outer_all_deleted(BusinessDeleteDay=day).count())
+        # 净申请
+        for _i in xrange(0, len(thirty_business_day)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+        # 存量
+        for day in thirty_business_day:
+            data['data4'].append(get_duration_by_day_and_ha(day))
+    else:
+        pass
     return JsonResponse(data, safe=False)
 

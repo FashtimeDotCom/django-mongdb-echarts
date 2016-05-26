@@ -4,8 +4,8 @@
 
 // 绑定一个点击事件,生成新的图表
 
-var modal_company = UIkit.modal("#modal-1",{bgclose:false});
-var modal_industry = UIkit.modal("#modal-2",{bgclose:false});
+var modal_company = UIkit.modal("#modal-1", {bgclose: false});
+var modal_industry = UIkit.modal("#modal-2", {bgclose: false});
 
 // 行业前十模态
 top_10_industry.on('click', function (params) {
@@ -546,7 +546,7 @@ function get_instance_pure_increase_company(json_data) {
             grid: {
                 left: '8%',
                 right: '8%',
-                bottom: '3%',
+                bottom: '8%',
                 containLabel: false
             }
         };
@@ -555,3 +555,142 @@ function get_instance_pure_increase_company(json_data) {
         instance_pure_increase_company.setOption(option);
     });
 }
+
+
+var instance_pure_increase_ha = echarts.init(document.getElementById('instance_pure_increase_ha'));
+function get_instance_pure_increase_ha(button) {
+    if (instance_pure_increase_ha) {
+        console.log('instance_pure_increase_ha is exist.')
+    }
+    else {
+        console.log('instance_pure_increase_ha is not exist.');
+        var instance_pure_increase_ha = echarts.init(document.getElementById('instance_pure_increase_ha'));
+    }
+
+    instance_pure_increase_ha.showLoading();
+    $.get('/instance_pure_increase_ha/', {'time_grading': button.name}).done(function (data) {
+        var option = {
+            title: {
+                text: data['title'],
+                subtext: '粒度包括最近12个月/最近15周/最近30天'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:data['legend'],
+                selectedMode: 'single',
+                //selected: {
+                //    '净增': true
+                //}
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    //dataZoom: {},
+                    //dataView: {readOnly: false},
+                    magicType: {type: ['bar', 'line']},
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis:  {
+                type: 'category',
+                boundaryGap: false,
+                data: data['xAxis']
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 个'
+                }
+            },
+            series: [
+                {
+                    name:'申请',
+                    type:'line',
+                    smooth:true,
+                    data:data['data1'],
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    }
+                },
+                {
+                    name:'删除',
+                    type:'line',
+                    smooth:true,
+                    data:data['data2'],
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    }
+                },
+                {
+                    name:'净增',
+                    type:'line',
+                    smooth:true,
+                    data:data['data3'],
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    }
+                },
+                {
+                    name:'存量',
+                    type:'line',
+                    smooth:true,
+                    data:data['data4'],
+                    //markLine: {
+                    //    data: [
+                    //        {type: 'average', name: '平均值'}
+                    //    ]
+                    //}
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            ]
+        };
+
+        instance_pure_increase_ha.hideLoading();
+        instance_pure_increase_ha.setOption(option);
+    });
+}
+
+$('[data-uk-switcher]').on('show.uk.switcher', function(event, area){
+    //console.log("Switcher switched to ", area);
+    if (instance_pure_increase_ha) {
+        console.log("i am here:", instance_pure_increase_ha);
+        get_instance_pure_increase_ha({'name': 'month'});
+    }
+    else {
+        console.log("i am not here:");
+        //var instance_pure_increase_ha = echarts.init(document.getElementById('instance_pure_increase_ha'));
+        get_instance_pure_increase_ha({'name': 'month'});
+    }
+});

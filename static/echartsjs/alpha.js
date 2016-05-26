@@ -18,6 +18,7 @@ var top_10_company_pure_delete_week = echarts.init(document.getElementById('top_
 var fish_bone_disk = echarts.init(document.getElementById('fish_bone_disk'));
 var fish_bone_memory = echarts.init(document.getElementById('fish_bone_memory'));
 var instance_pure_increase = echarts.init(document.getElementById('instance_pure_increase'));
+var instance_pure_increase_ha = echarts.init(document.getElementById('instance_pure_increase_ha'));
 // 二期需求开始
 
 outer.showLoading();
@@ -986,6 +987,7 @@ function get_instance_pure_increase(button) {
         instance_pure_increase.setOption(option);
     });
 }
+
 get_instance_pure_increase({'name': 'month'});
 
 // 点击事件在beta.js

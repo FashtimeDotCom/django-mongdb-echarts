@@ -1,13 +1,12 @@
 # coding:utf8
-from .models import Db
+from .models import Db_HA
 
 
 # 获得某月存量
-def get_duration_by_month_and_company(month=None, company_name=None):
+def get_duration_by_month_and_ha(month=None):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
@@ -41,18 +40,20 @@ def get_duration_by_month_and_company(month=None, company_name=None):
             }
         }
     ]
-    cur = Db._get_collection().aggregate(pipeline)
-    result = cur.next()
+    cur = Db_HA._get_collection().aggregate(pipeline)
+    try:
+        result = cur.next()
+    except StopIteration:
+        return 0
     cur.close()
     return result['count']
 
 
 # 获得某周存量
-def get_duration_by_week_and_company(week=None, company_name=None):
+def get_duration_by_week_and_ha(week=None):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
@@ -85,18 +86,20 @@ def get_duration_by_week_and_company(week=None, company_name=None):
             }
         }
     ]
-    cur = Db._get_collection().aggregate(pipeline)
-    result = cur.next()
+    cur = Db_HA._get_collection().aggregate(pipeline)
+    try:
+        result = cur.next()
+    except StopIteration:
+        return 0
     cur.close()
     return result['count']
 
 
 # 获得某日存量
-def get_duration_by_day_and_company(day=None, company_name=None):
+def get_duration_by_day_and_ha(day=None):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
@@ -130,9 +133,12 @@ def get_duration_by_day_and_company(day=None, company_name=None):
         }
     ]
     # 创建游标
-    cur = Db._get_collection().aggregate(pipeline)
+    cur = Db_HA._get_collection().aggregate(pipeline)
     # 聚合结果存下来
-    result = cur.next()
+    try:
+        result = cur.next()
+    except StopIteration:
+        return 0
     # 关闭游标
     cur.close()
     # 返回结果
