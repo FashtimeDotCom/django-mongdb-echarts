@@ -546,7 +546,7 @@ function get_instance_pure_increase_company(json_data) {
             grid: {
                 left: '8%',
                 right: '8%',
-                bottom: '8%',
+                //bottom: '8%',
                 containLabel: false
             }
         };
