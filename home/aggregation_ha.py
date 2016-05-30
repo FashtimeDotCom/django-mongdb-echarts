@@ -143,3 +143,41 @@ def get_duration_by_day_and_ha(day=None):
     cur.close()
     # 返回结果
     return result['count']
+
+
+def get_top_10_self_build_instance_count(limit=None):
+    pipeline = [
+        {
+            '$match': {
+                'InnerMark': 'No',
+            }
+        },
+        {
+            '$project': {
+                "CompanyName": "$CompanyName",
+                "Manager": "$Manager",
+            }
+        },
+        {
+            '$group': {
+                '_id': "$CompanyName",
+                'manager': {'$first': "$Manager"},
+                'count': {'$sum': 1},
+            }
+        },
+        {
+            '$sort': {'count': -1}
+        },
+        {
+            '$limit': limit
+        }
+    ]
+    cur = D._get_collection().aggregate(pipeline)
+    tmp_list = []
+    result = []
+    for _ in xrange(0, limit):
+        tmp_list.append(cur.next())
+    cur.close()
+    for i in xrange(0, limit):
+        result.append({'value': tmp_list[i]['count'], 'name': tmp_list[i]['_id'] + '(' + tmp_list[i]['manager'] + ')'})
+    return result

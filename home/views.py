@@ -13,6 +13,7 @@ from operator import itemgetter
 from aggregation import *
 from aggregation_company import *
 from aggregation_ha import *
+from aggregation_self_build import *
 import math
 from home.models import Db_HA
 
@@ -789,3 +790,14 @@ def instance_pure_increase_ha(request):
         pass
     return JsonResponse(data, safe=False)
 
+
+@csrf_exempt
+def top_10_self_build_instance_count(request):
+    _ = get_top_10_self_build_instance_count(limit=50)
+    data = {
+        'data': _
+    }
+    return JsonResponse(data, safe=False)
+
+
+print get_top_10_self_build_instance_count(limit=1)

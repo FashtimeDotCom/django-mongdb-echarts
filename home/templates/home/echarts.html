@@ -216,6 +216,39 @@
                 <div class="uk-grid"></div>
             </div>
         </div>
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-1">
+                <h4 class="uk-margin-left"><i class="uk-icon-table"></i> 自建DB前50用户</h4>
+                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
+                    <table id="self_build" class="cell-border" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">实例数量</th>
+                                <th colspan="2">BI Information</th>
+                                <th colspan="3">详情</th>
+                            </tr>
+                            <tr>
+                                <th>用户</th>
+                                <th>项目经理</th>
+                                <th>行业</th>
+                                <th>省份</th>
+                                <th>区域</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>实例数量</th>
+                                <th>用户</th>
+                                <th>项目经理</th>
+                                <th>行业</th>
+                                <th>省份</th>
+                                <th>区域</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <!-- 所有摸态框 -->
         {% include "home/module.html" %}
@@ -229,5 +262,44 @@
 	<script type="text/javascript" src={% static "echartsjs/alpha.js" %}></script>
 	<script type="text/javascript" src={% static "echartsjs/beta.js" %}></script>
     <script>
+        $(document).ready(function() {
+            $('#self_build').DataTable({
+                "scrollX": true,
+                "order": [[ 0, "desc" ]],
+                "ajax": "top_10_self_build_instance_count",
+                "columns": [
+                    { "data": "count" },
+                    { "data": "_id" },
+                    { "data": "manager" },
+                    { "data": "Industry" },
+                    { "data": "Province" },
+                    { "data": "City" }
+                ],
+                "language": {
+                    "sProcessing":   "处理中...",
+                    "sLengthMenu":   "显示 _MENU_ 项结果",
+                    "sZeroRecords":  "没有匹配结果",
+                    "sInfo":         "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    "sInfoEmpty":    "显示第 0 至 0 项结果，共 0 项",
+                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                    "sInfoPostFix":  "",
+                    "sSearch":       "搜索:",
+                    "sUrl":          "",
+                    "sEmptyTable":     "表中数据为空",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands":  ",",
+                    "oPaginate": {
+                        "sFirst":    "首页",
+                        "sPrevious": "上页",
+                        "sNext":     "下页",
+                        "sLast":     "末页"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": 以升序排列此列",
+                        "sSortDescending": ": 以降序排列此列"
+                    }
+                }
+            });
+        });
     </script>
 {% endblock %}

@@ -682,6 +682,7 @@ function get_instance_pure_increase_ha(button) {
     });
 }
 
+// 切换器配置load图表
 $('[data-uk-switcher]').on('show.uk.switcher', function(event, area){
     //console.log("Switcher switched to ", area);
     if (instance_pure_increase_ha) {
@@ -694,3 +695,6 @@ $('[data-uk-switcher]').on('show.uk.switcher', function(event, area){
         get_instance_pure_increase_ha({'name': 'month'});
     }
 });
+
+
+// 自建

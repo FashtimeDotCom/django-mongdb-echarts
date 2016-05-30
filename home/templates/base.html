@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href={% static "css/docs.css" %} />
 	<link rel="stylesheet" href={% static "css/sweetalert.css" %} />
 	<link rel="stylesheet" href={% static "css/sticky.almost-flat.min.css" %} />
+	<link rel="stylesheet" href={% static "css/jquery.dataTables.min.css" %} />
     <link type="image/x-icon" rel="icon" href="{% static "img/db.ico" %}">
 {#	<link rel="stylesheet" href={% static "css/jsontree.css" %} />#}
     {% block css %}
@@ -23,11 +24,11 @@
         Made by <a href="mailto:kevin.gao@ucloud.cn">kevin.gao</a>, with mongodb, echarts, django, and caffeine.
     </p>
 
-    <script type="text/javascript" src={% static "js/jquery-1.11.2.js" %}></script>
+    <script type="text/javascript" src={% static "js/jquery-1.12.3.min.js" %}></script>
 	<script type="text/javascript" src={% static "js/uikit.min.js" %}></script>
 	<script type="text/javascript" src={% static "js/sweetalert.min.js" %}></script>
 	<script type="text/javascript" src={% static "js/sticky.min.js" %}></script>
-{#	<script type="text/javascript" src={% static "js/jsontree.min.js" %}></script>#}
+	<script type="text/javascript" src={% static "js/jquery.dataTables.min.js" %}></script>
     {% block js %}
     {% endblock %}
 </body>

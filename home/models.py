@@ -146,7 +146,7 @@ class Db_HA(Document):
     }
 
 
-class Db_self_build(Document):
+class DbSelfBuild(Document):
     Region = StringField()
     AzGroup = StringField()
     DBClass = StringField()
@@ -160,3 +160,7 @@ class Db_self_build(Document):
     meta = {
         'collection': 't_self_build_instance',
     }
+
+    @queryset_manager
+    def outer(self, _queryset):
+        return _queryset(Q(State__ne='Delete') & Q(InnerMark='No'))
