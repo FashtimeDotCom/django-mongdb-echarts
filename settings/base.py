@@ -130,6 +130,6 @@ _MONGODB_NAME = 'udb'
 _MONGODB_DATABASE_HOST = 'mongodb://%s:%s@%s/%s' \
     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
 
-print _MONGODB_DATABASE_HOST
+# print _MONGODB_DATABASE_HOST
 mongoengine.connect(host=_MONGODB_DATABASE_HOST)
 # mongoengine.connect(host=_MONGODB_DATABASE_HOST, username=_MONGODB_USER, password=_MONGODB_PASSWD)
