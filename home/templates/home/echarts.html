@@ -266,10 +266,10 @@
     <script>
         $(document).ready(function() {
             $('#self_build').DataTable({
-                "scrollX": true,
-                "order": [[ 0, "desc" ]],
-                "ajax": "top_10_self_build_instance_count",
-                "columns": [
+                scrollX: true,
+                order: [[ 0, "desc" ]],
+                ajax: "top_10_self_build_instance_count",
+                columns: [
                     { "data": "count" },
                     { "data": "_id" },
                     { "data": "manager" },
@@ -278,7 +278,7 @@
                     { "data": "City" },
                     { "data": "AzGroup" }
                 ],
-                "language": {
+                language: {
                     "sProcessing":   "处理中...",
                     "sLengthMenu":   "显示 _MENU_ 项结果",
                     "sZeroRecords":  "没有匹配结果",
@@ -301,7 +301,10 @@
                         "sSortAscending":  ": 以升序排列此列",
                         "sSortDescending": ": 以降序排列此列"
                     }
-                }
+                },
+{#                scrollY:        '50vh',#}
+{#                scrollCollapse: true,#}
+{#                paging:         false#}
             });
         });
     </script>
