@@ -793,11 +793,9 @@ def instance_pure_increase_ha(request):
 
 @csrf_exempt
 def top_10_self_build_instance_count(request):
-    _ = get_top_10_self_build_instance_count(limit=50)
+    _ = get_top_10_self_build_instance_count(limit=100)
     data = {
         'data': _
     }
     return JsonResponse(data, safe=False)
 
-
-print get_top_10_self_build_instance_count(limit=1)

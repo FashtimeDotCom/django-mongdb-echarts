@@ -217,10 +217,10 @@
             </div>
         </div>
 
-        <!-- 自建DB前50用户 -->
+        <!-- 自建DB前100用户 -->
         <div class="uk-grid" id="top_10_self_build_instance_count">
             <div class="uk-width-medium-1-1">
-                <h4 class="uk-margin-left"><i class="uk-icon-table"></i> 自建DB前50用户</h4>
+                <h4 class="uk-margin-left"><i class="uk-icon-table"></i> 自建DB前100用户</h4>
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <table id="self_build" class="cell-border" cellspacing="0" width="100%">
                         <thead>
@@ -269,6 +269,7 @@
         $(document).ready(function() {
             $('#self_build').DataTable({
                 scrollX: true,
+                iDisplayLength: 25,
                 order: [[ 0, "desc" ]],
                 ajax: "top_10_self_build_instance_count",
                 columns: [
