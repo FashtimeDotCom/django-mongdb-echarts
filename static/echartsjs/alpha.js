@@ -66,7 +66,8 @@ $.get('/outer/').done(function (data) {
 
                 label: {
                     normal: {
-                        position: 'inner'
+                        show: false
+                        //position: 'inner'
                     }
                 },
                 labelLine: {
@@ -83,7 +84,13 @@ $.get('/outer/').done(function (data) {
 
                 label: {
                     normal: {
-                        position: 'inner'
+                        show: false
+                        //position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
                     }
                 },
 
