@@ -448,9 +448,9 @@ function get_instance_pure_increase_company(json_data) {
             legend: {
                 data:data['legend'],
                 selectedMode: 'single',
-                //selected: {
-                //    '净增': true
-                //}
+                selected: {
+                    '存量': true
+                }
             },
             toolbox: {
                 show: true,
@@ -580,9 +580,9 @@ function get_instance_pure_increase_ha(button) {
             legend: {
                 data:data['legend'],
                 selectedMode: 'single',
-                //selected: {
-                //    '净增': true
-                //}
+                selected: {
+                    '存量': true
+                }
             },
             toolbox: {
                 show: true,
