@@ -133,3 +133,13 @@ _MONGODB_DATABASE_HOST = 'mongodb://%s:%s@%s/%s' \
 # print _MONGODB_DATABASE_HOST
 mongoengine.connect(host=_MONGODB_DATABASE_HOST)
 # mongoengine.connect(host=_MONGODB_DATABASE_HOST, username=_MONGODB_USER, password=_MONGODB_PASSWD)
+
+# messages框架配置
+from django.contrib import messages
+MESSAGE_TAGS = {
+    # messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
