@@ -1,13 +1,12 @@
 # coding:utf8
 from __future__ import division
 # Create your views here.
-from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 import calendar
 from datetime import timedelta
 import time
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http.response import JsonResponse, HttpResponse
 import pytz
 import datetime
 from operator import itemgetter
@@ -30,22 +29,22 @@ class EchartsIndexView(TemplateView):
     template_name = "home/echarts.html"
     permission = "sessions.add_session"
 
-    def dispatch(self, *args, **kwargs):
-        username = self.request.META.get("user")
-        if username:
-            if not check_permission(username, self.permission):
-                return HttpResponse(
-                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>首次登陆".format(
-                        username)
-                )
-            return super(EchartsIndexView, self).dispatch(*args, **kwargs)
-        else:
-            if not self.request.user.has_perm(self.permission):
-                return HttpResponse(
-                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>非首次登陆".format(
-                        self.request.user)
-                )
-            return super(EchartsIndexView, self).dispatch(*args, **kwargs)
+    # def dispatch(self, *args, **kwargs):
+    #     username = self.request.META.get("user")
+    #     if username:
+    #         if not check_permission(username, self.permission):
+    #             return HttpResponse(
+    #                 "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>首次登陆".format(
+    #                     username)
+    #             )
+    #         return super(EchartsIndexView, self).dispatch(*args, **kwargs)
+    #     else:
+    #         if not self.request.user.has_perm(self.permission):
+    #             return HttpResponse(
+    #                 "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>非首次登陆".format(
+    #                     self.request.user)
+    #             )
+    #         return super(EchartsIndexView, self).dispatch(*args, **kwargs)
 
 
 def business_week_to_date(week=None):
