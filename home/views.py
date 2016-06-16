@@ -1,12 +1,13 @@
 # coding:utf8
 from __future__ import division
 # Create your views here.
+from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 import calendar
 from datetime import timedelta
 import time
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponseRedirect, HttpResponse
 import pytz
 import datetime
 from operator import itemgetter
@@ -16,6 +17,7 @@ from aggregation_ha import *
 from aggregation_self_build import *
 import math
 from home.models import Db_HA
+from .permission import check_permission
 
 global zero_time, zero_timestamp
 zero_timestamp = 1357488000
@@ -24,14 +26,26 @@ zero_time = time.localtime(zero_timestamp)
 # time.struct_time(tm_year=2013, tm_mon=1, tm_mday=1, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=1, tm_isdst=0)
 
 
-class IndexView(TemplateView):
-    template_name = "home/index.html"
+class EchartsIndexView(TemplateView):
+    template_name = "home/echarts.html"
+    permission = "sessions.add_session"
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['auther'] = "kevin.gao@ucloud.cn"
-        context['current_page'] = "home"
-        return context
+    def dispatch(self, *args, **kwargs):
+        username = self.request.META.get("user")
+        if username:
+            if not check_permission(username, self.permission):
+                return HttpResponse(
+                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>首次登陆".format(
+                        username)
+                )
+            return super(EchartsIndexView, self).dispatch(*args, **kwargs)
+        else:
+            if not self.request.user.has_perm(self.permission):
+                return HttpResponse(
+                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>非首次登陆".format(
+                        self.request.user)
+                )
+            return super(EchartsIndexView, self).dispatch(*args, **kwargs)
 
 
 def business_week_to_date(week=None):
@@ -54,10 +68,6 @@ def local_to_utc(local_dt, time_zone):
     local = pytz.timezone(time_zone)
     local_dt = local.localize(local_dt, is_dst=None)
     return local_dt.astimezone(pytz.utc)
-
-
-class EchartsIndexView(TemplateView):
-    template_name = "home/echarts.html"
 
 
 # print "共{}个".format(Db.objects.count())

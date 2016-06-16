@@ -11,6 +11,18 @@
 
         <!-- 包含内容项目的容器 -->
 
+        <!-- 通知 -->
+        <div class="uk-grid uk-margin-top">
+            <div class="uk-width-medium-1-1">
+                {% if message %}
+                    <div class="uk-alert" data-uk-alert>
+                        <a href="" class="uk-alert-close uk-close"></a>
+                        <p>message</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
         <!-- 实例净新增 -->
         <div class="uk-grid uk-margin-top">
             <div class="uk-width-medium-1-1">
