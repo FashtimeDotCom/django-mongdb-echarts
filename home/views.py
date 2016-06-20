@@ -30,7 +30,7 @@ class EchartsIndexView(TemplateView):
     permission = "sessions.add_session"
 
     def dispatch(self, *args, **kwargs):
-        username = self.request.META.get("user")
+        username = self.request.META.get("REMOTE_USER")
         if username:
             if not check_permission(username, self.permission):
                 return HttpResponse(
