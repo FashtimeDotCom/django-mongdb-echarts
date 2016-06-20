@@ -34,7 +34,7 @@ class EchartsIndexView(TemplateView):
         if username:
             if not check_permission(username, self.permission):
                 return HttpResponse(
-                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn<br>首次登陆".format(
+                    "权限({0})：空<br>联系人：ernest.luo@ucloud.cn<br>操作人：kevin.gao@ucloud.cn".format(
                         username)
                 )
             return super(EchartsIndexView, self).dispatch(*args, **kwargs)
