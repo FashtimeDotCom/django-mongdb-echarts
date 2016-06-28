@@ -11,6 +11,7 @@ import pytz
 import datetime
 from operator import itemgetter
 from aggregation import *
+from aggregation3 import *
 from aggregation_company import *
 from aggregation_ha import *
 from aggregation_self_build import *
@@ -808,3 +809,77 @@ def top_10_self_build_instance_count(request):
     }
     return JsonResponse(data, safe=False)
 
+
+# 三期需求开始
+@csrf_exempt
+def memory_pure_increase(request):
+    time_grading = request.GET['time_grading']
+    data = {
+        'title': "",
+        'legend': ['创建', '删除', '净增', '存量'],
+        'xAxis': [],
+        'data1': [],
+        'data2': [],
+        'data3': [],
+        'data4': [],
+    }
+    # 月粒度
+    if time_grading == 'month':
+        data['title'] = "内存 创建/删除/净增/存量（GB）"
+        _local_now = datetime.datetime.now()
+        current_business_month = (_local_now.year - zero_time.tm_year) * 12 + _local_now.month
+        twelve_business_month = xrange(current_business_month-11, current_business_month+1)
+        data['xAxis'] = [u'{}月'.format(12 if month % 12 == 0 else month % 12) for month in twelve_business_month]
+        # 当月创建
+        for month in twelve_business_month:
+            data['data1'].append(int(round(Db.outer_all(BusinessCreateMonth=month).sum('MemoryLimit') / 1024)))
+        # 当月删除
+        for month in twelve_business_month:
+            data['data2'].append(int(round(Db.outer_all_deleted(BusinessDeleteMonth=month,).sum('MemoryLimit') / 1024)))
+        # 净申请
+        for _i in xrange(0, len(twelve_business_month)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+
+        # 存量
+        for month in twelve_business_month:
+            data['data4'].append(int(round(get_memory_diskspace_total_by_month(month)['memory_count'] / 1024)))
+    # 周粒度
+    elif time_grading == 'week':
+        data['title'] = "内存 创建/删除/净增/存量（GB）"
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_week = int(math.ceil((current_timestamp - zero_timestamp) / 604800))
+        fifteen_business_week = xrange(current_business_week-14, current_business_week+1)
+        data['xAxis'] = [u'{}'.format(business_week_to_date(week)) for week in fifteen_business_week]
+        # 当周申请
+        for week in fifteen_business_week:
+            data['data1'].append(int(round(Db.outer_all(BusinessCreateWeek=week).sum('MemoryLimit') / 1024)))
+        # 当周删除
+        for week in fifteen_business_week:
+            data['data2'].append(int(round(Db.outer_all_deleted(BusinessDeleteWeek=week).sum('MemoryLimit') / 1024)))
+        # 净申请
+        for _i in xrange(0, len(fifteen_business_week)):
+            data['data3'].append(data['data1'][_i] - data['data2'][_i])
+        # 存量
+        for week in fifteen_business_week:
+            data['data4'].append(int(round(get_memory_diskspace_total_by_week(week)['memory_count'] / 1024)))
+    # 天粒度
+    elif time_grading == 'day':
+        data['title'] = "内存 创建/删除/净增/存量（GB）"
+        _local_now = datetime.datetime.now()
+        current_timestamp = time.mktime(_local_now.timetuple())
+        current_business_day = int(math.ceil((current_timestamp - zero_timestamp) / 86400))
+        thirty_business_day = xrange(current_business_day - 29, current_business_day + 1)
+        data['xAxis'] = [u'{}'.format((_local_now + timedelta(days=i)).strftime('%d')) for i in range(-29, 1)]
+        # 当日申请
+        print thirty_business_day
+        for day in thirty_business_day:
+            zeng = int(round(Db.outer_all(BusinessCreateDay=day).sum('MemoryLimit') / 1024))
+            jian = int(round(Db.outer_all_deleted(BusinessDeleteDay=day).sum('MemoryLimit') / 1024))
+            data['data1'].append(zeng)
+            data['data2'].append(jian)
+            data['data3'].append(zeng - jian)
+            data['data4'].append(int(round(get_memory_diskspace_total_by_day(day)['memory_count'] / 1024)))
+    else:
+        pass
+    return JsonResponse(data, safe=False)

@@ -92,6 +92,24 @@
             </div>
         </div>
 
+        <!-- 内存净新增 -->
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-1">
+                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
+                    <div class="uk-margin">
+                      时间粒度：
+                      <div class="uk-button-group" data-uk-button-radio>
+                        <button name="month" class="uk-button uk-button-success uk-active" onclick="get_memory_pure_increase(this)">月</button>
+                        <button name="week" class="uk-button uk-button-success" onclick="get_memory_pure_increase(this)">周</button>
+                        <button name="day" class="uk-button uk-button-success" onclick="get_memory_pure_increase(this)">日</button>
+                      </div>
+                    </div>
+                    <div id="memory_pure_increase" style="height:600px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 上周前十公司周净增 -->
         <div class="uk-grid">
             <div class="uk-width-medium-1-1 uk-text-center">
@@ -277,11 +295,12 @@
 	<script type="text/javascript" src={% static "js/vintage.js" %}></script>
 	<script type="text/javascript" src={% static "echartsjs/alpha.js" %}></script>
 	<script type="text/javascript" src={% static "echartsjs/beta.js" %}></script>
+	<script type="text/javascript" src={% static "echartsjs/gamma.js" %}></script>
     <script>
         $(document).ready(function() {
             $('#self_build').DataTable({
                 scrollX: true,
-                iDisplayLength: 25,
+                iDisplayLength: 10,
                 order: [[ 0, "desc" ]],
                 ajax: "top_10_self_build_instance_count",
                 columns: [
