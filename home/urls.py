@@ -44,5 +44,6 @@ urlpatterns += [
     url(r'^top_10_self_build_instance_count/', top_10_self_build_instance_count,
         name="top_10_self_build_instance_count"),
     # 三期
-    url(r'^memory_pure_increase/', memory_pure_increase, name="memory_pure_increase")
+    url(r'^memory_pure_increase/', memory_pure_increase, name="memory_pure_increase"),
+    url(r'^disk_pure_increase/', disk_pure_increase, name="disk_pure_increase")
 ]

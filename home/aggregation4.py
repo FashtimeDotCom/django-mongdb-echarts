@@ -2,18 +2,15 @@
 from .models import Db
 
 
-# 获得某月存量
-def get_duration_by_month_and_company(month=None, company_name=None):
+# 获得内存某月存量
+def get_diskspace_total_by_month(month=None,):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                # "D": "$DiskSpace",
-                # "M": "$MemoryLimit",
-                # "duration": {'$subtract': ['$DiskSpace', '$MemoryLimit']},
+                "D": "$DiskSpace",
                 'cmp': {
                     '$and': [
                         {
@@ -35,32 +32,26 @@ def get_duration_by_month_and_company(month=None, company_name=None):
         {
             '$group': {
                 '_id': "$cmp",
-                'count': {'$sum': 1},
-                # 'disk_count': {'$sum': '$D'},
-                # 'memory_count': {'$sum': '$M'},
+                # 'count': {'$sum': 1},
+                'disk_count': {'$sum': '$D'},
             }
         }
     ]
     cur = Db._get_collection().aggregate(pipeline)
-    try:
-        result = cur.next()
-    except StopIteration:
-        return 0
+    result = cur.next()
     cur.close()
-    return result['count']
+    return result
 
 
-# 获得某周存量
-def get_duration_by_week_and_company(week=None, company_name=None):
+# 获得内存某周存量
+def get_diskspace_total_by_week(week=None,):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                # "D": "$DiskSpace",
-                # "M": "$MemoryLimit",
+                "D": "$DiskSpace",
                 'cmp': {
                     '$and': [
                         {
@@ -82,32 +73,26 @@ def get_duration_by_week_and_company(week=None, company_name=None):
         {
             '$group': {
                 '_id': "$cmp",
-                'count': {'$sum': 1},
-                # 'disk_count': {'$sum': '$D'},
-                # 'memory_count': {'$sum': '$M'}
+                # 'count': {'$sum': 1},
+                'disk_count': {'$sum': '$D'},
             }
         }
     ]
     cur = Db._get_collection().aggregate(pipeline)
-    try:
-        result = cur.next()
-    except StopIteration:
-        return 0
+    result = cur.next()
     cur.close()
-    return result['count']
+    return result
 
 
-# 获得某日存量
-def get_duration_by_day_and_company(day=None, company_name=None):
+# 获得内存某日存量
+def get_diskspace_total_by_day(day=None,):
     pipeline = [
         {
-            '$match': {'InnerMark': 'No',
-                       'CompanyName': company_name}
+            '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                # "D": "$DiskSpace",
-                # "M": "$MemoryLimit",
+                "D": "$DiskSpace",
                 'cmp': {
                     '$and': [
                         {
@@ -129,17 +114,12 @@ def get_duration_by_day_and_company(day=None, company_name=None):
         {
             '$group': {
                 '_id': "$cmp",
-                'count': {'$sum': 1},
-                # 'disk_count': {'$sum': '$D'},
-                # 'memory_count': {'$sum': '$M'}
+                # 'count': {'$sum': 1},
+                'disk_count': {'$sum': '$D'},
             }
         }
     ]
-    # 创建游标
     cur = Db._get_collection().aggregate(pipeline)
-    try:
-        result = cur.next()
-    except StopIteration:
-        return 0
+    result = cur.next()
     cur.close()
-    return result['count']
+    return result

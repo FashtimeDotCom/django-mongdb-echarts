@@ -3,14 +3,13 @@ from .models import Db
 
 
 # 获得内存某月存量
-def get_memory_diskspace_total_by_month(month=None,):
+def get_memory_total_by_month(month=None,):
     pipeline = [
         {
             '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                "D": "$DiskSpace",
                 "M": "$MemoryLimit",
                 'cmp': {
                     '$and': [
@@ -34,7 +33,6 @@ def get_memory_diskspace_total_by_month(month=None,):
             '$group': {
                 '_id': "$cmp",
                 # 'count': {'$sum': 1},
-                'disk_count': {'$sum': '$D'},
                 'memory_count': {'$sum': '$M'},
             }
         }
@@ -46,14 +44,13 @@ def get_memory_diskspace_total_by_month(month=None,):
 
 
 # 获得内存某周存量
-def get_memory_diskspace_total_by_week(week=None,):
+def get_memory_total_by_week(week=None,):
     pipeline = [
         {
             '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                "D": "$DiskSpace",
                 "M": "$MemoryLimit",
                 'cmp': {
                     '$and': [
@@ -76,8 +73,6 @@ def get_memory_diskspace_total_by_week(week=None,):
         {
             '$group': {
                 '_id': "$cmp",
-                # 'count': {'$sum': 1},
-                'disk_count': {'$sum': '$D'},
                 'memory_count': {'$sum': '$M'},
             }
         }
@@ -89,14 +84,13 @@ def get_memory_diskspace_total_by_week(week=None,):
 
 
 # 获得内存某日存量
-def get_memory_diskspace_total_by_day(day=None,):
+def get_memory_total_by_day(day=None,):
     pipeline = [
         {
             '$match': {'InnerMark': 'No'}
         },
         {
             '$project': {
-                "D": "$DiskSpace",
                 "M": "$MemoryLimit",
                 'cmp': {
                     '$and': [
@@ -119,8 +113,6 @@ def get_memory_diskspace_total_by_day(day=None,):
         {
             '$group': {
                 '_id': "$cmp",
-                # 'count': {'$sum': 1},
-                'disk_count': {'$sum': '$D'},
                 'memory_count': {'$sum': '$M'},
             }
         }

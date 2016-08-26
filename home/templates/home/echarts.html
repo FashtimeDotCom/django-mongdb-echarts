@@ -34,9 +34,9 @@
                                     <div class="uk-margin">
                                       时间粒度：
                                       <div class="uk-button-group" data-uk-button-radio>
-                                        <button name="month" class="uk-button uk-button-primary uk-active" onclick="get_instance_pure_increase(this)">月</button>
-                                        <button name="week" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">周</button>
-                                        <button name="day" class="uk-button uk-button-primary" onclick="get_instance_pure_increase(this)">日</button>
+                                        <button name="month" class="uk-button uk-button-primary uk-button-small uk-active" onclick="get_instance_pure_increase(this)">月</button>
+                                        <button name="week" class="uk-button uk-button-primary uk-button-small" onclick="get_instance_pure_increase(this)">周</button>
+                                        <button name="day" class="uk-button uk-button-primary uk-button-small" onclick="get_instance_pure_increase(this)">日</button>
                                       </div>
                                     </div>
 
@@ -51,9 +51,9 @@
                                     <div class="uk-margin">
                                       时间粒度：
                                       <div class="uk-button-group" data-uk-button-radio>
-                                        <button name="month" class="uk-button uk-button-danger uk-active" onclick="get_instance_pure_increase_ha(this)">月</button>
-                                        <button name="week" class="uk-button uk-button-danger" onclick="get_instance_pure_increase_ha(this)">周</button>
-                                        <button name="day" class="uk-button uk-button-danger" onclick="get_instance_pure_increase_ha(this)">日</button>
+                                        <button name="month" class="uk-button uk-button-danger uk-button-small uk-active" onclick="get_instance_pure_increase_ha(this)">月</button>
+                                        <button name="week" class="uk-button uk-button-danger uk-button-small" onclick="get_instance_pure_increase_ha(this)">周</button>
+                                        <button name="day" class="uk-button uk-button-danger uk-button-small" onclick="get_instance_pure_increase_ha(this)">日</button>
                                       </div>
                                     </div>
 
@@ -65,8 +65,8 @@
                     </ul>
                     <!-- 包含拨动按钮的按钮租 -->
                     <div class="uk-button-group uk-float-right" data-uk-switcher="{connect:'#my-id'}">
-                        <button class="uk-button uk-button-primary" type="button">所有实例</button>
-                        <button class="uk-button uk-button-danger" type="button">高可用实例</button>
+                        <button class="uk-button uk-button-small uk-button-primary" type="button">所有实例</button>
+                        <button class="uk-button uk-button-small uk-button-danger" type="button">高可用实例</button>
                     </div>
                 </div>
             </div>
@@ -97,14 +97,32 @@
             <div class="uk-width-medium-1-1">
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
                     <div class="uk-margin">
-                      时间粒度：
+                      内存统计 时间粒度：
                       <div class="uk-button-group" data-uk-button-radio>
-                        <button name="month" class="uk-button uk-button-success uk-active" onclick="get_memory_pure_increase(this)">月</button>
-                        <button name="week" class="uk-button uk-button-success" onclick="get_memory_pure_increase(this)">周</button>
-                        <button name="day" class="uk-button uk-button-success" onclick="get_memory_pure_increase(this)">日</button>
+                        <button name="month" class="uk-button uk-button-small uk-button-success uk-active" onclick="get_memory_pure_increase(this)">月</button>
+                        <button name="week" class="uk-button uk-button-small uk-button-success" onclick="get_memory_pure_increase(this)">周</button>
+                        <button name="day" class="uk-button uk-button-small uk-button-success" onclick="get_memory_pure_increase(this)">日</button>
                       </div>
                     </div>
                     <div id="memory_pure_increase" style="height:600px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 磁盘净新增 -->
+        <div class="uk-grid">
+            <div class="uk-width-medium-1-1">
+                <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
+                    <div class="uk-margin">
+                      磁盘统计 时间粒度：
+                      <div class="uk-button-group" data-uk-button-radio>
+                        <button name="month" class="uk-button uk-button-success uk-button-small uk-active" onclick="get_disk_pure_increase(this)">月</button>
+                        <button name="week" class="uk-button uk-button-success uk-button-small" onclick="get_disk_pure_increase(this)">周</button>
+                        <button name="day" class="uk-button uk-button-success uk-button-small" onclick="get_disk_pure_increase(this)">日</button>
+                      </div>
+                    </div>
+                    <div id="disk_pure_increase" style="height:600px;">
                     </div>
                 </div>
             </div>
@@ -146,13 +164,13 @@
                         <div class="uk-width-medium-1-1">
                             <div id="top_10_company" style="height:800px;"></div>
                         </div>
-{#                        <div class="uk-width-medium-1-2">#}
-{#                            <div id="top_10_company_further2" style="height:400px;">#}
-{#                            </div>#}
-{#                                    ◀️ 点击左侧公司查看详细信息#}
-{#                            <div id="top_10_company_further" style="height:400px;">#}
-{#                            </div>#}
-{#                        </div>#}
+                        <div class="uk-width-medium-1-1 uk-text-center">
+                            <form class="uk-form" onsubmit="return false" id="input_company">
+                                <input type="text" class="uk-form-controls" name="company_name">
+                                <button class="uk-button" onclick="get_company_info()">其他公司名字查询</button>
+                                <p class="uk-text-muted uk-text-small">*名字输入错误无数据*</p>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="uk-grid"></div>
@@ -185,16 +203,15 @@
                         <div class="uk-width-medium-1-1">
                             <div id="top_10_industry" style="height:800px;"></div>
                         </div>
-{#                        <div class="uk-width-medium-1-2">#}
-{#                            <div id="top_10_industry_further2" style="height:400px;">#}
-{#                            </div>#}
-{#                                    ◀️ 点击左侧行业查看详细信息#}
-{#                            <div id="top_10_industry_further" style="height:400px;">#}
-{#                            </div>#}
-{#                        </div>#}
+                        <div class="uk-width-medium-1-1 uk-text-center">
+                            <form class="uk-form" onsubmit="return false" id="input_industry">
+                                <input type="text" class="uk-form-controls" name="industry_name">
+                                <button class="uk-button" onclick="get_industry_info()">其他行业名字查询</button>
+                                <p class="uk-text-muted uk-text-small">*名字输入错误无数据*</p>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="uk-grid"></div>
             </div>
         </div>
 
@@ -212,7 +229,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="uk-grid"></div>
             </div>
         </div>
 
@@ -252,7 +268,7 @@
             <div class="uk-width-medium-1-1">
                 <h4 class="uk-margin-left"><i class="uk-icon-table"></i> 自建DB前100用户</h4>
                 <div class="uk-panel uk-panel-box uk-panel-box-secondary uk-margin-right uk-margin-left">
-                    <table id="self_build" class="cell-border" cellspacing="0" width="100%">
+                    <table id="self_build" class="row-border" cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th rowspan="2">实例数量</th>
